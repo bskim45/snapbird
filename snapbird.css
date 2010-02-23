@@ -8,396 +8,400 @@ section, article, aside, header, footer {
 }
 
 body {
-  margin: 0;
-  padding: 0;
   background: #b0d349 url(/images/background.jpg) repeat-x top left;
-  font-family: helvetica, arial;
-  font-size: 18px;
-}
-
-header {
-  background: url(/images/header.jpg) no-repeat top center;
-  height: 223px;
-  display: block;
-  min-width: 780px;
-  margin: 0 auto;
-}
-
-header p {
-  display: none;
-}
-
-header h1 a {
-  opacity: 0;
-  -moz-opacity: 0;
-  filter:alpha(opacity=0);
-  position: absolute;
-  text-indent: -9999px;
-  overflow: hidden;
-  display: block;
-  top: 100px;
-  left: 0;
-  height: 100px;
-  width: 100%;
-/*  margin: 200px 300px;*/
-}
-
-#mainFooter {
-  width: 780px;
-  margin: 0 auto;
-  height: 7px;
-  background: url(/images/footer-no-results.jpg) no-repeat top left;
-}
-
-.results #mainFooter {
-  background-image: url(/images/footer-results.jpg);
-}
-
-#tweets {
-  display: none;
-}
-
-.results #tweets {
-  display: block;
-}
-
-#main {
-  background: url(/images/main-bg.jpg) no-repeat;
-  height: 295px;
-  width: 690px;
-  margin: 0 auto;
-  color: #F2F2F2;
-  padding: 45px;
-}
-
-#main p, #main li, #main label {
-  text-shadow: rgba(0,0,0,0.6) 1px 1px 2px;
-}
-
-footer {
-  font-size: 14px;
-  width: 780px;
-  margin: 0 auto;
-  position: relative;
-}
-
-footer ul {
-  position: absolute;
-  right: 0;
-  padding: 25px 0;  
-}
-
-footer nav ul {
-  left: 0;
-}
-
-#credit {
-  text-transform: lowercase;
-}
-
-footer li {
-  background: url(/images/divider.gif) no-repeat center left;
-  padding: 5px 15px;
-  float: left;
-  display: block;
-}
-
-footer ul li:first-child {
-  background: none;
-}
-
-footer a {
-  color: #E6FFE1;
-  text-decoration: none;
-}
-
-footer nav a {
-  font-weight: bold;
-}
-
-ul.plain {
-/*  list-style: none;*/
-  font-weight: normal;
-  font-size: 15px;
-  margin-left: 35px;
-}
-
-ul.plain li {
-  margin: 5px 0;
-}
-
-form {
-  margin: 40px 35px;
+  font-family: "helvetica neue", helvetica, arial;
 }
 
 fieldset {
-  border: 0px solid #000;
-  padding: 0;
-  width: 400px;
-  margin-bottom: 30px;
-/*  position: relative;*/
-}
-
-fieldset legend {
-  display: none;
-}
-
-input[type=text], span.input {
-  padding: 5px;
-  background: #fff;
-  width: 200px;
-  font-family: helvetica, arial;
-  font-size: 18px;
-  border: 1px solid #6b4a2d;
-/*  shadow: #000 10px 10px 10px;*/
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  -o-border-radius: 3px;
-  border-radius: 3px;
-}
-
-span.input {
-  color: #999;
-  display: none;
-}
-
-span.input:after {
-  content: ' (locked)';
-}
-
-.radiogroup {
-  margin: 5px 10px;
-  padding-left: 50px;
-}
-
-.radiogroup label {
-  font-size: 14px;
-  opacity: 0.8;
-  -moz-opacity: 0.8;
-  filter:alpha(opacity=80);
-  padding: 5px 20px 5px 5px;
-}
-
-.note {
-  line-height: 14px;
-  font-size: 11px;
-  text-align: center;
-  width: 270px;
-}
-
-.for div {
-  float: left;
-}
-
-.submit, .button {
-  cursor: pointer;
-  background: url(/images/button-bg.gif) repeat-x bottom left;
-  display: block;
-  color: #fff;
-  text-shadow: rgba(0,0,0,0.8) 1px 1px 2px;
-  font-size: 15px;
-  font-weight: bold;
-  padding: 10px;
-  border: 1px solid #000;
-  border-style: groove;
-  margin-top: 10px;
-  -webkit-border-radius: 10px;
-  -moz-border-radius: 10px;
-}
-
-.submit {
-  float: right;
-  font-size: 22px;
-  height: 50px;
-  width: 125px;
-  -webkit-border-radius: 12px;
-  -moz-border-radius: 12px;
-  -webkit-rotate: 5px;
-  -webkit-transform: rotate(5deg);
-  -moz-transform: rotate(5deg);
-}
-
-#bang {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: url(/images/bang.png) no-repeat center;
-}
-
-#tweets {
-  width: 758px;
-  margin: 0 auto;
-  background: #fff;
-  padding-bottom: 22px;
-  padding-left: 22px;
-  -webkit-border-bottom-left-radius: 15px;
-  -webkit-border-bottom-right-radius: 15px;
-  -moz-border-radius-bottomleft: 15px;
-  -moz-border-radius-bottomright: 15px;
   position: relative;
-}
-
-#tweets ul {
-  min-height: 165px;
-  width: 520px;
-  padding-top: 22px;
-  padding-right: 22px;
-  margin: 0;
-}
-
-#tweets aside {
-  position: absolute;
-  margin-left: 538px;
-  width: 170px;
-  padding: 15px;
-  margin-top: 22px;
-  background: #d7e9a4;
-  -moz-border-radius: 15px;
-  -webkit-border-radius: 15px;
-}
-
-#tweets aside.fixed {
-  position: fixed;
-  top: 0;
-}
-
-/* twitter styles */
-#tweets li {
-  background: url(/images/dots.gif) repeat-x left bottom;
-  font-size: 14px;
-}
-
-#tweets a {
-  color: #2277bb;
-}
-
-#tweets a:hover, #tweets a:active, #tweets a:focus, #tweets a {
-  text-decoration: none;
-}
-
-#tweets a:hover {
-  text-decoration: underline;
-}
-
-#tweets a img {
   border: 0;
 }
 
-#tweets li {
-  padding: 0;
-  margin: 0;
-  list-style: none;
-}
-
-.tweet {
-  clear: left;
-  min-height: 48px;
-  padding: 9px;
-  line-height: 1.1;
+#content {
   position: relative;
+  background: url(/images/main-bg.jpg) no-repeat top left;
+  padding: 10px;
+  width: 780px;
+  margin: 0 auto;
 }
 
-#tweets li.searchterm {
-  font-size: 22px;
-  padding: 20px 0;
+h1 {
+  background: url(/images/snapbird-logo.png) no-repeat;
+  height: 76px;
+  width: 204px;
 }
 
-.vcard {
-  float: left;
-}
-
-.hentry {
-  margin-left: 58px;
-}
-
-.hentry .meta {
-  color: #999;
-  font-size: 0.764em;
-  margin: 3px 0 0;
+h1 a {
+  opacity: 0;
+  height: 76px;
+  width: 204px;
   display: block;
+  filter:alpha(opacity=0);
 }
 
-#tweets .meta a {
-  color: #999;
+header h2 {
+  margin-top: -5px;
+  font-size: 16px;
+  color: #0971a1;
+  margin-left: 18px;
 }
 
-.tweet:hover {
-  background-color: #F7F7F7;
+#screen_name.screen_name {
+/*  padding-left: 20px; */
 }
 
-#status {
-  font-size: 14px;
-  color: #565d42;
+input[type=text], select {
+  margin-left: 15px;
+  width: 235px;
+  padding: 5px;
+  color: #3d5b4c;
+  font-size: 12px;
+  font-weight: bold;
+  border: 3px solid #94a3a8;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
 }
 
-#status p {
-  margin: 5px 0 15px 0;
+select {
+  height: 32px;
 }
 
-#status p strong {
-/*  display: block;*/
+input {
+  background: #fff url(/images/input-bg.gif) repeat-x top left;
+}
+
+select {
+  background: url(/images/select-bg.gif) repeat-x top left;
+  width: 250px;
+}
+
+fieldset div {
+  margin: 6px 0;
+  clear: left;
+  width: 340px;
+}
+
+div label {
+  float: left;
+  display: block;
+  width: 70px;
+  text-transform: uppercase;
+  color: #3d5b4c;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 32px;
+  text-align: right;
+}
+
+option, select {
+  text-transform: uppercase;
 }
 
 #auth {
   display: none;
 }
 
-.auth #auth {
-  display: block;
+#results {
+  margin: 20px;
+  margin-bottom: 10px;
+  background: #fff;
+  padding: 15px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
 }
 
-#overlay {
-  position: fixed;
+#intro {
+  margin: 20px 15px;
+/*  width: 100px;*/
+}
+
+h2 {
+  font-size: 16px;
+/*  color: #0971a1;*/
+  margin-left: 18px;
+  color: #275300;
+}
+
+#controls {
+  width: 355px;
+}
+
+#worm-and-bird {
+  position: absolute;
+  background: url(/images/worm.png) no-repeat 57px 35px;
+  height: 220px;
+  width: 425px;
   top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: #000;
-  opacity: 0.4;
-  -moz-opacity: 0.4;
-  filter:alpha(opacity=40);
+  right: 0;
+}
+
+#findit-btn { 
+  background: url(/images/find-it.png) no-repeat;
+  text-indent: -9999px;
+  border: 0;
+  width: 105px;
+  height: 50px;
+  bottom: 0;
+  position: absolute;
+  cursor: pointer;
+}
+
+#findit-btn:active { 
+  background-position: 0px 2px;
+}
+
+#info {
+  background: url(/images/info.png) no-repeat;
+  height: 20px;
+  width: 20px;
+  display: block;
+  position: absolute;
+  top: 30px;
+  right: 40px;
 }
 
 #login {
-  width: 500px;
-  margin: 0 auto;
+  text-decoration: none;
 }
 
-#login > div {
-/*  border: 10px solid rgba(0,0,0,0.5);*/
+.button {
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  border: 1px solid #0971a1;
+  background: url(/images/button-bg.gif) repeat-x;
+  height: 25px;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow: #01212F 1px 1px 3px;
+  text-decoration: none;
+  font-size: 11px;
+  display: inline-block;
+  line-height: 25px;
+  padding: 0 8px;
+}
+
+#authenticate-button {
+  position: absolute;
+  top: 53px;
+  right: 40px;
+}
+
+#twitter-logo {
+  text-indent: -9999px;
+  overflow: hidden;
+  background: url(/images/twitter-logo.png) no-repeat;
+  display: inline-block;
+  height: 12px;
+  width: 53px;
+  vertical-align: text-top;
+}
+
+#bird {
+  background: url(/images/bird.png) no-repeat;
+  height: 57px;
+  width: 71px;
+  position: absolute;
+  top: 1px;
+  right: 162px;
+}
+
+#authenticate-info {
+  display: none;
+  background: #cff;
+  font-size: 11px;
+  padding: 10px;
+  padding-top: 15px;
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
-  background: rgba(0,0,0,0.4);
-  position: absolute;
-  top: 200px;
-  width: 500px;
-  padding: 10px;
+  border-radius: 10px;
+  color: #435e5b;
+  position:absolute;
+  right: 40px;
+  top: 65px;
+  width: 165px;
 }
 
-#login div div {
-  color: #fff;
-  padding: 10px 30px;
-  background: #000;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
+#login:hover #authenticate-info {
+  display: block;
 }
 
-#login p {
-  line-height: 28px;
+#authenticate-info p {
+  margin-top: 7px;
+}
+
+#intro h2 {
+  color: #275300;
+  font-size: 20px;
+  text-transform: uppercase;
   margin: 20px 0;
 }
 
-#login a {
-  text-decoration: none;
-  display: inline;
+#tweets_about_snapbird {
+  float: right;
+  width: 255px;
+  margin: 20px 25px;
 }
 
-#permalink {
+#tweets_about_snapbird h2 {
+  margin: 0;
+}
+
+#tweets_about_snapbird ul {
+  list-style: none;
+}
+
+#tweets_about_snapbird li {
+  font-size: 12px;
+  margin: 10px;
+  margin-right: 0;
+  padding-left: 50px;
+  clear: left;
+  position: relative;
+  border-top: 1px solid #eee;
+  padding-top: 10px;
+  min-height: 24px;
+}
+
+#tweets_about_snapbird li a {
+  color: #000;
+  text-decoration: none;
+}
+
+#tweets_about_snapbird img {
+  border: 0;
+}
+
+#tweets_about_snapbird li:first-child {
+  border-top: 0;
+}
+
+#tweets_about_snapbird li img {
+  left: 0;
+  position: absolute;
+}
+
+table {
+  width: 390px;
+  border-collapse: collapse;
+  border-spacing: 10px;
+}
+
+table thead .twitter,
+table thead .snapbird {
+  width: 90px;
+  text-transform: uppercase;
+  -moz-border-radius-topleft: 5px;
+  -moz-border-radius-topright: 5px;
+  -webkit-border-top-left-radius: 5px;
+  -webkit-border-top-right-radius: 5px;
+}
+
+table tfoot th {
+  -moz-border-radius-bottomleft: 5px;
+  -moz-border-radius-bottomright: 5px;
+  -webkit-border-bottom-left-radius: 5px;
+  -webkit-border-bottom-right-radius: 5px;
+}
+
+th {
+  font-size: 12px;
+  padding: 5px 10px;
+  color: #ccc;
+  color: #9F0000;
+  vertical-align: top;
+}
+
+th.twitter {
+  background: #f4f4f4;
+}
+
+th.snapbird {
+  background: #ffc;
+  color: #275300;
+  font-size: 13px;
+}
+
+table thead .no {
+  opacity: 0;
+  width: 350px;
+}
+
+table tbody td {
+  text-transform: lowercase;
+  font-weight: bold;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+  padding: 15px 0;
+  color: #666;
   font-size: 14px;
 }
 
-.loading #search {
-  background: #fff url(/images/ajax-loader.gif) no-repeat 98% 50%;
+tbody td.yes {
+  height: 15px;
+  background: url(/images/tickcross.png) no-repeat 50% 15px;
+}
+
+tbody td.no {
+  height: 15px;
+  background: url(/images/tickcross.png) no-repeat 50% -29px;
+}
+
+tbody td:nth-child(2n) {
+  background-color: #f4f4f4;
+}
+
+td:nth-child(3n),
+th:nth-child(3n) {
+  border-left: 2px solid #fff;
+}
+
+tbody td:nth-child(3n) {
+  background-color: #ffc;
+}
+
+.clear {
+  clear: both;
+}
+
+footer {
+  font-size: 12px;
+  margin: 0 auto;
+  position: relative;
+}
+ 
+footer ul {
+  position: absolute;
+  right: 0;
+  padding: 10px 0;  
+}
+ 
+footer nav ul {
+  left: 0;
+}
+ 
+#credit {
+  text-transform: lowercase;
+}
+ 
+footer li {
+  background: url(/images/divider.gif) no-repeat center left;
+  padding: 5px 15px;
+  float: left;
+  display: block;
+}
+ 
+footer ul li:first-child {
+  background: none;
+}
+ 
+footer a {
+  color: #E6FFE1;
+  text-decoration: none;
+}
+ 
+footer nav a {
+  font-weight: bold;
 }
