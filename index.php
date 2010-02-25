@@ -24,7 +24,16 @@ if ($_COOKIE['token'] && file_exists('auth/oauth/' . $_COOKIE['token'])) {
 
 $screen_name = isset($_GET['screen_name']) ? $_GET['screen_name'] : '';
 $search = isset($_GET['search']) ? $_GET['search'] : '';
-$type = isset($_GET['type']) ? $_GET['type'] : 'timeline';
+$rawtype = isset($_GET['type']) ? $_GET['type'] : 'timeline';
+
+$type = array(
+  'timeline' => $rawtype == 'timeline' ? 'selected' : '',
+  'favs' => $rawtype == 'favs' ? 'selected' : '',
+  'mentions' => $rawtype == 'mentions' ? 'selected' : '',
+  'withfriends' => $rawtype == 'withfriends' ? 'selected' : '',
+  'dm_sent' => $rawtype == 'dm_sent' ? 'selected' : '',
+  'dm' => $rawtype == 'dm' ? 'selected' : ''
+);
 
 if ($type == 'list') {
   $type = 'timeline';
@@ -63,12 +72,12 @@ if ($type == 'list') {
         <div>
           <label for="type">Search</label>
           <select name="type" id="type">
-            <option value="timeline">Someones timeline</option>
-            <option value="favs">Someones favourites</option>
-            <option value="withfriends">Your friends' tweets</option>
-            <option value="mentions">Tweets mentioning you</option>
-            <option value="dm_sent">Your sent direct messages</option>
-            <option value="dm">Your received direct messages</option>
+            <option <?=$type['timeline']?> value="timeline">Someones timeline</option>
+            <option <?=$type['favs']?> value="favs">Someones favourites</option>
+            <option <?=$type['withfriends']?> value="withfriends">Your friends' tweets</option>
+            <option <?=$type['mentions']?> value="mentions">Tweets mentioning you</option>
+            <option <?=$type['dm_sent']?> value="dm_sent">Your sent direct messages</option>
+            <option <?=$type['dm']?> value="dm">Your received direct messages</option>
           </select>
         </div>
         <div>
@@ -76,12 +85,12 @@ if ($type == 'list') {
           <?php if ($twitterInfo != null) : ?>
           <span id="auth_screen_name"><?= $twitterInfo->screen_name ?></span>
           <?php endif ?>
-          <input class="screen_name" type="text" id="screen_name" name="screen_name" placeholder="username" />
+          <input class="screen_name" type="text" id="screen_name" name="screen_name" placeholder="username" value="<?=$screen_name?>" />
         </div>
         <div>
           <label for="search">For</label>
-          <input type="text" id="search" name="search" placeholder="search term" />
-        </div>        
+          <input type="text" id="search" name="search" placeholder="search term" value="<?=$search?>" />
+        </div>
       </fieldset>
     </article>
     <div id="worm-and-bird" class="showinfo">
@@ -180,6 +189,7 @@ if ($type == 'list') {
         <p id="outof">200 searched</p>
         <h3>dating back to the <strong id="time">morning</strong> of</h3>
         <p id="datingbackto"></p>
+        <a href="/" id="permalink" class="button">Permalink</a>
       </aside>
       
       <ul></ul>

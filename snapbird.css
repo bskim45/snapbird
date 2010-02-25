@@ -488,7 +488,7 @@ body.results #results {
   -webkit-border-radius: 5px;
   border-radius: 5px;
 }
- 
+
 #tweets aside.fixed {
   position: fixed;
   top: 0;
@@ -511,20 +511,25 @@ body.results #results {
   background: url(/images/dots.gif) repeat-x left bottom;
   font-size: 14px;
 }
+
+#tweets li.more {
+  border-bottom: 1px solid #ccc;
+  background: none;
+} 
  
-#tweets a {
+#tweets ul a {
   color: #2277bb;
 }
  
-#tweets a:hover, #tweets a:active, #tweets a:focus, #tweets a {
+#tweets ul a:hover, #tweets a:active, #tweets a:focus, #tweets a {
   text-decoration: none;
 }
  
-#tweets a:hover {
+#tweets ul a:hover {
   text-decoration: underline;
 }
  
-#tweets a img {
+#tweets ul a img {
   border: 0;
 }
  
