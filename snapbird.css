@@ -7,6 +7,10 @@ section, article, aside, header, footer {
   display: block;
 }
 
+strong, b {
+  font-weight: bold;
+}
+
 body {
   background: #b0d349 url(/images/background.jpg) repeat-x top left;
   font-family: "helvetica neue", helvetica, arial;
@@ -53,18 +57,32 @@ header h2 {
 input[type=text], select {
   margin-left: 15px;
   width: 235px;
-  padding: 5px;
+  padding: 4px 7px;
   color: #3d5b4c;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: bold;
-  border: 3px solid #94a3a8;
+  border: 2px solid #94a3a8;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
 }
 
+#auth_screen_name {
+  display: none;
+  padding: 5px;
+  color: #989898;
+  font-size: 13px;
+  font-weight: bold;
+  position: absolute;
+  margin-left: 20px;
+}
+
+#auth_screen_name:before {
+  content: '@';
+}
+
 select {
-  height: 32px;
+  height: 30px;
 }
 
 input {
@@ -77,7 +95,7 @@ select {
 }
 
 fieldset div {
-  margin: 6px 0;
+  margin: 8px 0;
   clear: left;
   width: 340px;
 }
@@ -112,14 +130,8 @@ option, select {
   border-radius: 10px;
 }
 
-#intro {
-  margin: 20px 15px;
-/*  width: 100px;*/
-}
-
 h2 {
   font-size: 16px;
-/*  color: #0971a1;*/
   margin-left: 18px;
   color: #275300;
 }
@@ -232,6 +244,65 @@ h2 {
   margin-top: 7px;
 }
 
+.clear {
+  clear: both;
+}
+
+/** footer */
+
+footer {
+  font-size: 12px;
+  margin: 0 auto;
+  position: relative;
+}
+ 
+footer ul {
+  position: absolute;
+  right: 0;
+  padding: 10px 0;  
+}
+ 
+footer nav ul {
+  left: 0;
+}
+ 
+#credit {
+  text-transform: lowercase;
+}
+ 
+footer li {
+  background: url(/images/divider.gif) no-repeat center left;
+  padding: 5px 15px;
+  float: left;
+  display: block;
+}
+ 
+footer ul li:first-child {
+  background: none;
+}
+ 
+footer a {
+  color: #E6FFE1;
+  text-decoration: none;
+}
+ 
+footer nav a {
+  font-weight: bold;
+}
+
+/* end **/
+
+/** 1) intro box */
+
+#intro {
+  margin: 20px 15px;
+  display: none;
+}
+
+body.intro #intro {
+  display: block;
+}
+
 #intro h2 {
   color: #275300;
   font-size: 20px;
@@ -242,11 +313,11 @@ h2 {
 #tweets_about_snapbird {
   float: right;
   width: 255px;
-  margin: 20px 25px;
 }
 
 #tweets_about_snapbird h2 {
   margin: 0;
+  font-size: 14px;
 }
 
 #tweets_about_snapbird ul {
@@ -362,46 +433,169 @@ tbody td:nth-child(3n) {
   background-color: #ffc;
 }
 
-.clear {
-  clear: both;
+/* end **/
+
+
+/** 2) search results */
+
+#tweets {
+  display: none;
 }
 
-footer {
-  font-size: 12px;
+#tweets h2 {
+  font-size: 22px;
+  font-weight: normal;
+  margin: 0;
+  color: #000;
+}
+
+body.results #tweets {
+  display: block;
+}
+
+body.results #results {
+  padding: 0 15px;
+}
+
+#tweets {
   margin: 0 auto;
+  background: #fff;
+  padding-bottom: 22px;
+  -webkit-border-bottom-left-radius: 15px;
+  -webkit-border-bottom-right-radius: 15px;
+  -moz-border-radius-bottomleft: 15px;
+  -moz-border-radius-bottomright: 15px;
   position: relative;
 }
  
-footer ul {
+#tweets ul {
+  padding-top: 15px;
+  min-height: 200px;
+  width: 465px;
+  margin: 0;
+}
+ 
+#tweets aside {
   position: absolute;
-  right: 0;
-  padding: 10px 0;  
+  margin-left: 480px;
+  width: 200px;
+  padding: 15px;
+  margin-top: 15px;
+  background: #ebf4d1;
+  border: 1px solid #bfd916;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
 }
  
-footer nav ul {
-  left: 0;
+#tweets aside.fixed {
+  position: fixed;
+  top: 0;
+}
+
+#tweets aside h3 {
+  font-size: 14px;
+  font-weight: lighter;
+  color: #4e732a;
+}
+
+#tweets aside p {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 5px;
 }
  
-#credit {
-  text-transform: lowercase;
+/* twitter styles */
+#tweets li {
+  background: url(/images/dots.gif) repeat-x left bottom;
+  font-size: 14px;
 }
  
-footer li {
-  background: url(/images/divider.gif) no-repeat center left;
-  padding: 5px 15px;
-  float: left;
-  display: block;
+#tweets a {
+  color: #2277bb;
 }
  
-footer ul li:first-child {
-  background: none;
-}
- 
-footer a {
-  color: #E6FFE1;
+#tweets a:hover, #tweets a:active, #tweets a:focus, #tweets a {
   text-decoration: none;
 }
  
-footer nav a {
-  font-weight: bold;
+#tweets a:hover {
+  text-decoration: underline;
 }
+ 
+#tweets a img {
+  border: 0;
+}
+ 
+#tweets li {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+ 
+.tweet {
+  clear: left;
+  min-height: 48px;
+  padding: 9px;
+  line-height: 1.1;
+  position: relative;
+}
+ 
+#tweets li.searchterm {
+  font-size: 22px;
+  padding-bottom: 20px;
+}
+ 
+.vcard {
+  float: left;
+}
+ 
+.hentry {
+  margin-left: 58px;
+}
+ 
+.hentry .meta {
+  color: #999;
+  font-size: 0.764em;
+  margin: 3px 0 0;
+  display: block;
+}
+ 
+#tweets .meta a {
+  color: #999;
+}
+ 
+.tweet:hover {
+/*  background-color: #F7F7F7;*/
+}
+ 
+#status {
+  font-size: 14px;
+  color: #565d42;
+}
+ 
+#status p {
+  margin: 5px 0 15px 0;
+}
+
+#loading {
+  display: none;
+  background: url(/images/loading.gif) no-repeat;
+  width: 325px;
+  margin: 0 auto;
+  font-weight: bold;
+  padding-bottom: 20px;
+  padding-left: 40px;
+  font-size: 12px;
+}
+
+#loading .num {
+  font-size: 36px;
+  color: #ccc;
+}
+
+body.loading #loading {
+  display: block;
+}
+
+/* end **/

@@ -1,34 +1,34 @@
 <?php
-// include('auth/secret.php');
-// include('auth/php/EpiCurl.php');
-// include('auth/php/EpiOAuth.php');
-// include('auth/php/EpiTwitter.php');
-// 
-// $twitterObj = new EpiTwitter(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET);
-// $twitterInfo = null;
-// 
-// if ($_COOKIE['token'] && file_exists('auth/oauth/' . $_COOKIE['token'])) {
-//  $username = file_get_contents('auth/oauth/' . $_COOKIE['token']);
-//  $userToken = $_COOKIE['token'];
-//  $userSecret = file_get_contents('auth/oauth/' . $username . '-sec');
-// 
-//  $twitterObj->setToken($userToken, $userSecret);
-//  $twitterInfo = $twitterObj->get_accountVerify_credentials();
-//  
-//  if (!$twitterInfo->screen_name) {
-//       // reset 
-//       $twitterObj = new EpiTwitter(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET);
-//       $twitterInfo = null;
-//   }  
-// }
-// 
-// $screen_name = isset($_GET['screen_name']) ? $_GET['screen_name'] : '';
-// $search = isset($_GET['search']) ? $_GET['search'] : '';
-// $type = isset($_GET['type']) ? $_GET['type'] : 'timeline';
-// 
-// if ($type == 'list') {
-//   $type = 'timeline';
-// }
+include('auth/secret.php');
+include('auth/php/EpiCurl.php');
+include('auth/php/EpiOAuth.php');
+include('auth/php/EpiTwitter.php');
+
+$twitterObj = new EpiTwitter(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET);
+$twitterInfo = null;
+
+if ($_COOKIE['token'] && file_exists('auth/oauth/' . $_COOKIE['token'])) {
+ $username = file_get_contents('auth/oauth/' . $_COOKIE['token']);
+ $userToken = $_COOKIE['token'];
+ $userSecret = file_get_contents('auth/oauth/' . $username . '-sec');
+
+ $twitterObj->setToken($userToken, $userSecret);
+ $twitterInfo = $twitterObj->get_accountVerify_credentials();
+ 
+ if (!$twitterInfo->screen_name) {
+      // reset 
+      $twitterObj = new EpiTwitter(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET);
+      $twitterInfo = null;
+  }  
+}
+
+$screen_name = isset($_GET['screen_name']) ? $_GET['screen_name'] : '';
+$search = isset($_GET['search']) ? $_GET['search'] : '';
+$type = isset($_GET['type']) ? $_GET['type'] : 'timeline';
+
+if ($type == 'list') {
+  $type = 'timeline';
+}
 
 ?>
 <!DOCTYPE html>
@@ -51,7 +51,7 @@
 <![endif]-->
 <link rel="stylesheet" href="/snapbird.css" type="text/css" />
 </head>
-<body>
+<body class="results">
   <div id="content">
   <header>
     <h1><a href="/">Snap Bird</a></h1>
@@ -65,14 +65,17 @@
           <select name="type" id="type">
             <option value="timeline">Someones timeline</option>
             <option value="favs">Someones favourites</option>
-            <option value="with_friends">Your friends' tweets</option>
+            <option value="withfriends">Your friends' tweets</option>
             <option value="mentions">Tweets mentioning you</option>
             <option value="dm_sent">Your sent direct messages</option>
-            <option value="dm_received">Your received direct messages</option>
+            <option value="dm">Your received direct messages</option>
           </select>
         </div>
         <div>
           <label for="screen_name" id="screen_name_label">Who</label>
+          <?php if (true || $twitterInfo != null) : ?>
+          <span id="auth_screen_name">rem<?= /*$twitterInfo->screen_name*/'' ?></span>
+          <?php endif ?>
           <input class="screen_name" type="text" id="screen_name" name="screen_name" placeholder="username" />
         </div>
         <div>
@@ -83,7 +86,7 @@
     </article>
     <div id="worm-and-bird" class="showinfo">
       <input type="submit" value="find it" id="findit-btn" />
-      <a id="login" href="<?='#'/*$twitterObj->getAuthorizationUrl()*/?>">
+      <a id="login" href="<?=$twitterObj->getAuthorizationUrl()?>">
         <span id="info"></span>
         <div id="authenticate-info">
           <p>Twitter allows only <em><strong>you</strong></em> to search within your direct messages, friends' tweets, etc.</p>
@@ -95,34 +98,34 @@
     </div>
   </form>
   <article id="results">
-    <aside id="tweets_about_snapbird">
-      <h2>Tweets about Snap Bird</h2>
-      <ul>
-        <li>
-          <a href="#">
-          <img src="http://twivatar.org/rem/mini" />
-          Giggling at the spikes in traffic to http://isjeremyeatingtoast.com coinciding with @adactio's tweets: http://snapbird.org/adactio/toast
-          </a>
-        </li>
-        <li>
-          <img src="http://twivatar.org/xosecastro/mini" />
-          I've just found http://snapbird.org, a site to search tweets among the people you follow on Twitter. Thanks to Aardvark @vark
-        </li>
-        <li>
-          <img src="http://twivatar.org/shauninman/mini">
-          http://snapbird.org/ it is.
-        </li>
-        <li>
-          <img src="http://twivatar.org/rem/mini" />
-          Giggling at the spikes in traffic to http://isjeremyeatingtoast.com coinciding with @adactio's tweets: http://snapbird.org/adactio/toast
-        </li>
-        <li>
-          <img src="http://twivatar.org/xosecastro/mini" />
-          I've just found http://snapbird.org, a site to search tweets among the people you follow on Twitter. Thanks to Aardvark @vark
-        </li>
-      </ul>
-    </aside>
     <div id="intro">
+      <aside id="tweets_about_snapbird">
+        <h2>Tweets about Snap Bird</h2>
+        <ul>
+          <li>
+            <a href="#">
+            <img src="http://twivatar.org/rem/mini" />
+            Giggling at the spikes in traffic to http://isjeremyeatingtoast.com coinciding with @adactio's tweets: http://snapbird.org/adactio/toast
+            </a>
+          </li>
+          <li>
+            <img src="http://twivatar.org/xosecastro/mini" />
+            I've just found http://snapbird.org, a site to search tweets among the people you follow on Twitter. Thanks to Aardvark @vark
+          </li>
+          <li>
+            <img src="http://twivatar.org/shauninman/mini">
+            http://snapbird.org/ it is.
+          </li>
+          <li>
+            <img src="http://twivatar.org/rem/mini" />
+            Giggling at the spikes in traffic to http://isjeremyeatingtoast.com coinciding with @adactio's tweets: http://snapbird.org/adactio/toast
+          </li>
+          <li>
+            <img src="http://twivatar.org/xosecastro/mini" />
+            I've just found http://snapbird.org, a site to search tweets among the people you follow on Twitter. Thanks to Aardvark @vark
+          </li>
+        </ul>
+      </aside>
       <h2>Where can you search?</h2>
       <table>
         <thead>
@@ -168,6 +171,30 @@
         </tfoot>
       </table>
     </div>
+    
+    <div id="tweets">
+      <aside>
+        <h3>Snap Bird has matched</h3>
+        <p id="matchtweet">Zero tweets</p>
+        <h3>out of</h3>
+        <p id="outof">200 searched</p>
+        <h3>dating back to the morning of</h3>
+        <p id="datingbackto"></p>
+      </aside>
+      <ul></ul>
+    </div>
+    
+    <div id="loading">
+      <p>Loading results<br />from older tweets</p>
+      <p class="num">0-200</p>
+    </div>
+    
+    <div id="more">
+      <p class="searched">200 tweets searched.</p>
+      <p>Haven't found what you're looking for?</p>
+      <a class="button light" href="#more">Search next 1,000 tweets</a>
+    </div>
+    
     <div class="clear"></div>
   </article>
   <footer>
@@ -195,14 +222,14 @@
         <div>
           <p>We can only search within your own friends&rsquo; tweets, and you need to tell Twitter it&rsquo;s OK for us to search.</p>
           <p>Log in to Twitter and on the next screen press &ldquo;allow&rdquo;.</p>
-          <p><a class="button" href="<?= $twitterObj->getAuthorizationUrl() ?>">Go to Twitter.com</a> <a class="button cancel" href="#">Cancel</a></p>
+          <p><a class="button" href="<?=$twitterObj->getAuthorizationUrl()?>">Go to Twitter.com</a> <a class="button cancel" href="#">Cancel</a></p>
         </div>
       </div>
     </div>    
   </div>
 </div>
-<!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script> -->
-<!-- <script src="/twitterlib/twitterlib.js?2009-12-31"></script> -->
-<!-- <script src="/snapbird.js?2009-12-31"></script> -->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<script src="/twitterlib/twitterlib.min.js?2009-12-31"></script>
+<script src="/snapbird.js?2009-12-31"></script>
 </body>
 </html>

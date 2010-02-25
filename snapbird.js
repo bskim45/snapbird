@@ -95,45 +95,57 @@ $(function () {
   }  
 });
 
-$('input[type=radio]').bind('click change', function () {
-  var authRequired = $('input[type=radio].authRequired').is(':checked');
-  var auth = $('#auth_screen_name').length;
+var $status = $('#tweets aside p');
+function setStatus(matched, searched, oldest) {
+  var date = new Date(Date.parse(oldest));
   
-  if (authRequired && !auth) {
+  $status.eq(0).text(matched + (matched > 1 ? ' tweets' : ' tweet'));
+  // cheap thousand separator
+  $status.eq(1).text((searched+'').replace(/([0-9]+)([0-9]{3})/, "$1,$2") + ' searched');
+  $status.eq(2).text(twitterlib.time.date(date));
+}
+
+function updateLoading(type, currentTotal) {
+  var inc = 200;
+  if (type == 'favs') inc = 20;
+  $('#loading .num').text(total_searched + '-' + (total_searched+inc));
+}
+
+var $screen_name_label = $('#screen_name_label'),
+    $auth = $('#auth_screen_name'),
+    $screen_name = $('#screen_name');
+
+$('#type').bind('change keyup', function () {
+  var authRequired = !(this.value == 'timeline' || this.value == 'favs');
+  $screen_name_label.text(authRequired ? 'You' : 'Who');
+  if (authRequired && !$auth.length) {
     // show lightbox
     $('body').addClass('auth');
-  } else if (authRequired) {
-    $('#auth_screen_name').css('display', 'inline-block');
-    $('#screen_name').hide();
-  } else { // not checked
-    $('#auth_screen_name').css('display', 'none');
-    $('#screen_name').show();
+  } else if (authRequired && $auth.is(':hidden')) {
+    $screen_name.attr('disabled', true).data('old', $screen_name.val()).val(' '); // space forces the placeholder to hide
+    $auth.show();
+  } else if (!authRequired && $auth.is(':visible')) { // not checked
+    $auth.hide();
+    $screen_name.removeAttr('disabled').val( $screen_name.data('old') );      
   }
-});
+}).trigger('change');
 
 $('form').submit(function (e) {
   e.preventDefault();
   screen_name = $('#screen_name').val();
   
   var newstate = $(this).serialize(),
-      type = $(this).find('input[type=radio]:checked').val(),
+      type = $(this).find('#type').val(),
       search = $('#search').val(),
       filter = twitterlib.filter.format(search);
 
-  // if ($.trim(search.length) == 0) {
-  //   $('#status').html('Nothing to search for.');
-  //   // return;
-  // }
-  
+  $('body').removeClass('intro').addClass('results loading');
+  updateLoading(type);
+
   if (state != newstate) {
     state = newstate;
     store.set('screen_name', screen_name);
     
-    // if ( $('#favs').is(':checked') ) {
-    //   type = 'favs';
-    // } else if ($('#withfriends').is(':checked')) {
-    //   type = 'withfriends';
-    // } else 
     if (screen_name.match(/\//)) {
       type = 'list';
     }
@@ -146,21 +158,15 @@ $('form').submit(function (e) {
     
     $tweets.append('<li class="searchterm">Searching <em><strong>' + screen_name + '</strong>&rsquo;s ' + type_string[type] + '</em> for <strong>' + search.replace(/<>/g, function (m) { return m == '<' ? '&lt;' : '&gt;'; }) + '</strong></li>');
     $('body').addClass('results');
-    
-    updateRequestStatus();
-    $('body').addClass('loading');
-        
+            
     // cancel any outstanding request, and kick off a new one
     twitterlib.cancel()[type](screen_name, { filter: search }, function (data, options) {
       total_searched += options.originalTweets.length;
       
-      // if there's no results, do another call - and keep going until we hit something
-      if (data.length == 0 && total_tweets == 0 && options.originalTweets.length == 0) {
-        $('#status p:first').text('Searched ' + total_searched + ' tweets, found nothing.');
-        updateRequestStatus();
-      } else if (data.length == 0 && total_tweets == 0) {
-        $('#status').html('<p>Searching ' + total_searched + ' tweets.</p><p>Read to: <strong>' + twitterlib.time.datetime(options.originalTweets[options.originalTweets.length - 1].created_at).replace(/ (AM|PM)/, function (a, m) { return m.toLowerCase() + ','; }) + '</strong></p>');
-        updateRequestStatus();
+      setStatus(total_tweets + data.length, total_searched, options.originalTweets.length ? options.originalTweets[options.originalTweets.length - 1].created_at : null);
+      
+      // if there's no matched results, but there are raw Tweets, do another call - and keep going until we hit something
+      if (data.length == 0 && total_tweets == 0 && options.originalTweets.length > 0) {
         setTimeout(function () {
           twitterlib.next();
         }, 1000);
@@ -204,8 +210,8 @@ $('form').submit(function (e) {
             $(this).replaceWith(change);
           }
         });
-
       }
+      
       scrollPos = $tweets.find('li:last').offset().top;
       if (scrollPos != null) {
         setTimeout(function () {
@@ -215,12 +221,8 @@ $('form').submit(function (e) {
       }
       
       total_tweets += data.length;
-
-      if (options.originalTweets.length) $('#status').html('<p>Found ' + total_tweets + ' tweet' + (total_tweets == 1 ? '' : 's') + '.</p><p>Read to: <strong>' + twitterlib.time.datetime(options.originalTweets[options.originalTweets.length - 1].created_at).replace(/ (AM|PM)/, function (a, m) { return m.toLowerCase() + ','; }) + '</strong></p>');
       
-      updateRequestStatus();
       $('body').removeClass('loading');
-      
       
       if (statusTop == null) {
         statusTop = $('#tweets aside').offset().top - parseFloat($('#tweets aside').css('margin-top').replace(/auto/, 0));            
@@ -229,9 +231,6 @@ $('form').submit(function (e) {
     });
 
   } else {
-    $('#status').html('<p>Searched ' + total_searched + ' tweets.</p><p>Requesting more...</p>');
-    $('body').addClass('loading');
-    
     setTimeout(function () { twitterlib.cancel().next(); }, 250);
   } 
 });
