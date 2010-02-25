@@ -174,7 +174,7 @@ h2 {
   right: 40px;
 }
 
-#login {
+#logininfo {
   text-decoration: none;
 }
 
@@ -201,7 +201,7 @@ h2 {
   right: 40px;
 }
 
-#twitter-logo {
+.twitter-logo {
   text-indent: -9999px;
   overflow: hidden;
   background: url(/images/twitter-logo.png) no-repeat;
@@ -236,7 +236,7 @@ h2 {
   width: 165px;
 }
 
-#login:hover #authenticate-info {
+#logininfo:hover #authenticate-info {
   display: block;
 }
 
@@ -470,9 +470,10 @@ body.results #results {
  
 #tweets ul {
   padding-top: 15px;
-  min-height: 200px;
+  min-height: 70px;
   width: 465px;
   margin: 0;
+  margin-bottom: 20px;
 }
  
 #tweets aside {
@@ -579,10 +580,10 @@ body.results #results {
 }
 
 #loading {
+  width: 325px;
+  margin: 20px auto;
   display: none;
   background: url(/images/loading.gif) no-repeat;
-  width: 325px;
-  margin: 0 auto;
   font-weight: bold;
   padding-bottom: 20px;
   padding-left: 40px;
@@ -596,6 +597,104 @@ body.results #results {
 
 body.loading #loading {
   display: block;
+}
+
+body.loading #more {
+  display: none;
+}
+
+#more {
+  width: 465px;
+  margin: 0;
+}
+
+#more p {
+  margin: 10px 0;
+  text-align: center;
+}
+
+#more p.searched {
+  font-weight: bold;
+}
+
+#more a {
+  border-left: 1px solid #ddd;
+  border-top: 1px solid #ddd;
+  border-right: 1px solid #aaa;
+  border-bottom: 1px solid #aaa;
+  font-weight: bold;
+  line-height: 34px;
+  width: 450px;
+  background: url(/images/white-button-bg.gif) repeat-x;
+  height: 34px;
+  font-size: 18px;
+  color: #0971a1;
+  text-transform: none;
+  text-shadow: none;
+  text-decoration: none;
+  text-align: center;
+}
+
+#more a:hover {
+  text-decoration: none;
+}
+
+/* end **/
+
+/** auth overlay */
+
+#auth {
+  display: none;
+}
+ 
+.auth #auth {
+  display: block;
+}
+ 
+#overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  opacity: 0.4;
+  -moz-opacity: 0.4;
+  filter:alpha(opacity=40);
+}
+ 
+#login {
+  width: 500px;
+  margin: 0 auto;
+}
+ 
+#login > div {
+/*  border: 10px solid rgba(0,0,0,0.5);*/
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+/*  background: rgba(0,0,0,0.4);*/
+  background: rgba(191, 217, 22, 0.4);
+  position: absolute;
+  top: 200px;
+  width: 500px;
+  padding: 10px;
+}
+ 
+#login div div {
+  color: #000;
+  padding: 10px 30px;
+  background: rgb(235, 244, 209);
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+}
+ 
+#login p {
+  line-height: 28px;
+  margin: 20px 0;
+}
+ 
+#login a {
+  text-decoration: none;
 }
 
 /* end **/

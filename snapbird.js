@@ -42,8 +42,9 @@ var store = (function () {
 })();
 
 $('body').keyup(function (event) {
-  if (event.keyCode == 27) {
-    $('body').removeClass('auth loading');
+  if (event.which == 27) {
+    clearTimeout(timer);
+    $('body').removeClass('auth').removeClass('loading');
     twitterlib.cancel();
   }
 });
@@ -52,7 +53,9 @@ $('body').keyup(function (event) {
 var $tweets = $('#tweets ul'), 
     screen_name = url = state = '', 
     page = 1, 
+    pageMax = null,
     total_tweets = 0, 
+    timer = null,
     total_searched = 0,
     statusTop = null, 
     type_string = { 
@@ -64,11 +67,13 @@ var $tweets = $('#tweets ul'),
       dm_sent: 'sent direct messages'
     };
 
-twitterlib.custom('withfriends', '/friends.php?page=%page%');
-twitterlib.custom('dm', '/friends.php?page=%page%&type=direct_messages');
-twitterlib.custom('dm_sent', '/friends.php?page=%page%&type=direct_messagesSent');
+twitterlib.custom('withfriends', '/proxy.php?page=%page%');
+twitterlib.custom('dm', '/proxy.php?page=%page%&type=direct_messages');
+twitterlib.custom('dm_sent', '/proxy.php?page=%page%&type=direct_messagesSent');
+twitterlib.custom('mentions', '/proxy.php?page=%page%&type=statuses_mentions');
 
-$('input.search').live('click', function () {
+$('#more a').live('click', function () {
+  pageMax = 5;
   $('form').submit();
   return false;
 });
@@ -97,12 +102,29 @@ $(function () {
 
 var $status = $('#tweets aside p');
 function setStatus(matched, searched, oldest) {
-  var date = new Date(Date.parse(oldest));
+  var date = new Date(Date.parse(oldest)),
+      hour = date.getHours(),
+      niceSearched = (searched+'').replace(/([0-9]+)([0-9]{3})/, "$1,$2");
   
-  $status.eq(0).text(matched + (matched > 1 ? ' tweets' : ' tweet'));
+  $status.eq(0).text(matched + (matched == 1 ? ' tweet' : ' tweets'));
   // cheap thousand separator
-  $status.eq(1).text((searched+'').replace(/([0-9]+)([0-9]{3})/, "$1,$2") + ' searched');
-  $status.eq(2).text(twitterlib.time.date(date));
+  $status.eq(1).text(niceSearched + ' searched');
+  
+  if (oldest != undefined) {
+    $status.eq(2).text(twitterlib.time.date(date));
+
+    if (hour > 6 && hour < 12) {
+      $('#time').text('morning');
+    } else if (hour < 18) {
+      $('#time').text('afternoon');
+    } else if (hour < 22) {
+      $('#time').text('evening');
+    } else {
+      $('#time').text('night');
+    }    
+  }
+  
+  $('#more p.searched').text(niceSearched + ' tweets searched.');
 }
 
 function updateLoading(type, currentTotal) {
@@ -128,6 +150,9 @@ $('#type').bind('change keyup', function () {
     $auth.hide();
     $screen_name.removeAttr('disabled').val( $screen_name.data('old') );      
   }
+  
+  $('#more a').text('Search next ' + (this.value == 'favs' ? 100 : '1,000') + ' tweets');
+  
 }).trigger('change');
 
 $('form').submit(function (e) {
@@ -140,7 +165,6 @@ $('form').submit(function (e) {
       filter = twitterlib.filter.format(search);
 
   $('body').removeClass('intro').addClass('results loading');
-  updateLoading(type);
 
   if (state != newstate) {
     state = newstate;
@@ -152,6 +176,7 @@ $('form').submit(function (e) {
 
     total_tweets = 0;
     total_searched = 0;
+    updateLoading(type);
     $tweets.empty();
     
     $('#permalink').attr('href', '/' + screen_name + '/' + type + '/' + encodeURIComponent(search));
@@ -167,11 +192,22 @@ $('form').submit(function (e) {
       
       // if there's no matched results, but there are raw Tweets, do another call - and keep going until we hit something
       if (data.length == 0 && total_tweets == 0 && options.originalTweets.length > 0) {
-        setTimeout(function () {
+        // check if we're doing a page max
+        updateLoading(type);
+        clearTimeout(timer);
+        timer = setTimeout(function () {
+          twitterlib.next();
+        }, 1000);          
+        return;
+      } else if (total_tweets > 0 && data.length == 0 && options.originalTweets.length > 0 && pageMax > 0) {
+        pageMax--;
+        updateLoading(type);
+        clearTimeout(timer);
+        timer = setTimeout(function () {
           twitterlib.next();
         }, 1000);
         return;
-      } 
+      }
       
       if (total_tweets) {
         $tweets.find('li:last').addClass('more'); // hard split line
@@ -221,6 +257,7 @@ $('form').submit(function (e) {
       }
       
       total_tweets += data.length;
+      pageMax = null;
       
       $('body').removeClass('loading');
       
@@ -231,7 +268,9 @@ $('form').submit(function (e) {
     });
 
   } else {
-    setTimeout(function () { twitterlib.cancel().next(); }, 250);
+    updateLoading(type);
+    clearTimeout(timer);
+    timer = setTimeout(function () { twitterlib.cancel().next(); }, 250);
   } 
 });
 

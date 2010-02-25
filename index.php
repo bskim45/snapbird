@@ -51,7 +51,7 @@ if ($type == 'list') {
 <![endif]-->
 <link rel="stylesheet" href="/snapbird.css" type="text/css" />
 </head>
-<body class="results">
+<body class="intro">
   <div id="content">
   <header>
     <h1><a href="/">Snap Bird</a></h1>
@@ -73,8 +73,8 @@ if ($type == 'list') {
         </div>
         <div>
           <label for="screen_name" id="screen_name_label">Who</label>
-          <?php if (true || $twitterInfo != null) : ?>
-          <span id="auth_screen_name">rem<?= /*$twitterInfo->screen_name*/'' ?></span>
+          <?php if ($twitterInfo != null) : ?>
+          <span id="auth_screen_name"><?= $twitterInfo->screen_name ?></span>
           <?php endif ?>
           <input class="screen_name" type="text" id="screen_name" name="screen_name" placeholder="username" />
         </div>
@@ -86,13 +86,13 @@ if ($type == 'list') {
     </article>
     <div id="worm-and-bird" class="showinfo">
       <input type="submit" value="find it" id="findit-btn" />
-      <a id="login" href="<?=$twitterObj->getAuthorizationUrl()?>">
+      <a id="logininfo" href="<?=$twitterObj->getAuthorizationUrl()?>">
         <span id="info"></span>
         <div id="authenticate-info">
           <p>Twitter allows only <em><strong>you</strong></em> to search within your direct messages, friends' tweets, etc.</p>
           <p>Click here to let Twitter know we're authentically searching on your behalf.</p>
         </div>
-        <span id="authenticate-button" class="button">Authenticate with <span id="twitter-logo">Twitter</span></span>        
+        <span id="authenticate-button" class="button">Authenticate with <span class="twitter-logo">Twitter</span></span>        
       </a>
       <div id="bird"></div>
     </div>
@@ -175,26 +175,28 @@ if ($type == 'list') {
     <div id="tweets">
       <aside>
         <h3>Snap Bird has matched</h3>
-        <p id="matchtweet">Zero tweets</p>
+        <p id="matchtweet">none yet</p>
         <h3>out of</h3>
         <p id="outof">200 searched</p>
-        <h3>dating back to the morning of</h3>
+        <h3>dating back to the <strong id="time">morning</strong> of</h3>
         <p id="datingbackto"></p>
       </aside>
+      
       <ul></ul>
-    </div>
     
-    <div id="loading">
-      <p>Loading results<br />from older tweets</p>
-      <p class="num">0-200</p>
-    </div>
+      <div id="loading">
+        <p>Loading results<br />from older tweets</p>
+        <p class="num">0-200</p>
+        <p>Hit <em>escape</em> to cancel</p>
+      </div>
     
-    <div id="more">
-      <p class="searched">200 tweets searched.</p>
-      <p>Haven't found what you're looking for?</p>
-      <a class="button light" href="#more">Search next 1,000 tweets</a>
+      <div id="more">
+        <p class="searched">200 tweets searched.</p>
+        <p>Haven't found what you're looking for?</p>
+        <a class="button light" href="#more">Search next 1,000 tweets</a>
+      </div>
     </div>
-    
+  
     <div class="clear"></div>
   </article>
   <footer>
@@ -220,9 +222,9 @@ if ($type == 'list') {
     <div id="login">
       <div>
         <div>
-          <p>We can only search within your own friends&rsquo; tweets, and you need to tell Twitter it&rsquo;s OK for us to search.</p>
-          <p>Log in to Twitter and on the next screen press &ldquo;allow&rdquo;.</p>
-          <p><a class="button" href="<?=$twitterObj->getAuthorizationUrl()?>">Go to Twitter.com</a> <a class="button cancel" href="#">Cancel</a></p>
+          <p>To search within your own friends&rsquo; tweets and other personal streams to you, you need to tell Twitter it&rsquo;s OK for us to search.</p>
+          <p>Log in with Twitter and on the next screen press &ldquo;allow&rdquo;.</p>
+          <p><a class="button" href="<?=$twitterObj->getAuthorizationUrl()?>">Log in using <span class="twitter-logo">Twitter.com</span></a> <a class="button cancel" href="#">Cancel</a></p>
         </div>
       </div>
     </div>    
