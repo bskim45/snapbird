@@ -157,12 +157,14 @@ $('#type').bind('change keyup', function () {
 
 $('form').submit(function (e) {
   e.preventDefault();
-  screen_name = $('#screen_name').val();
   
   var newstate = $(this).serialize(),
       type = $(this).find('#type').val(),
       search = $('#search').val(),
       filter = twitterlib.filter.format(search);
+
+  screen_name = type == 'timeline' || type == 'favs' ? $('#screen_name').val() : $auth.val();
+
 
   $('body').removeClass('intro').addClass('results loading');
 
