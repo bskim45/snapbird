@@ -70,7 +70,7 @@ var $tweets = $('#tweets ul'),
 twitterlib.custom('withfriends', '/proxy.php?page=%page%');
 twitterlib.custom('dm', '/proxy.php?page=%page%&type=direct_messages');
 twitterlib.custom('dm_sent', '/proxy.php?page=%page%&type=direct_messagesSent');
-twitterlib.custom('mentions', '/proxy.php?page=%page%&type=statuses_mentions');
+twitterlib.custom('mentions', '/proxy.php?page=%page%&type=statusesMentions');
 
 $('#more a').live('click', function () {
   pageMax = 5;
