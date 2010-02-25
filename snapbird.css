@@ -30,7 +30,8 @@ fieldset {
 }
 
 h1 {
-  background: url(/images/snapbird-logo.png) no-repeat;
+  background-image: url(/images/spriteme1.png);
+  background-position: -10px -10px;
   height: 76px;
   width: 204px;
 }
@@ -86,11 +87,12 @@ select {
 }
 
 input {
-  background: #fff url(/images/input-bg.gif) repeat-x top left;
+  background: #fff url(/images/spriteme2.png) repeat-x 0px -80px;
 }
 
 select {
-  background: url(/images/select-bg.gif) repeat-x top left;
+  background-image: url(/images/spriteme2.png);
+  background-position: 0px -10px;
   width: 250px;
 }
 
@@ -150,7 +152,7 @@ h2 {
 }
 
 #findit-btn { 
-  background: url(/images/find-it.png) no-repeat;
+  background: url(/images/spriteme1.png) no-repeat -10px -106px;
   text-indent: -9999px;
   border: 0;
   width: 105px;
@@ -161,11 +163,12 @@ h2 {
 }
 
 #findit-btn:active { 
-  background-position: 0px 2px;
+  background-position: -10px -104px;
 }
 
 #info {
-  background: url(/images/info.png) no-repeat;
+  background-image: url(/images/spriteme1.png);
+  background-position: -10px -168px;
   height: 20px;
   width: 20px;
   display: block;
@@ -183,7 +186,7 @@ h2 {
   -moz-border-radius: 4px;
   border-radius: 4px;
   border: 1px solid #0971a1;
-  background: url(/images/button-bg.gif) repeat-x;
+  background: url(/images/spriteme2.png) repeat-x 0px -123px;
   height: 25px;
   text-transform: uppercase;
   color: #fff;
@@ -204,7 +207,8 @@ h2 {
 .twitter-logo {
   text-indent: -9999px;
   overflow: hidden;
-  background: url(/images/twitter-logo.png) no-repeat;
+  background-image: url(/images/spriteme1.png);
+  background-position: -10px -208px;
   display: inline-block;
   height: 12px;
   width: 53px;
@@ -212,7 +216,8 @@ h2 {
 }
 
 #bird {
-  background: url(/images/bird.png) no-repeat;
+  background-image: url(/images/spriteme1.png);
+  background-position: -10px -240px;
   height: 57px;
   width: 71px;
   position: absolute;
@@ -271,7 +276,8 @@ footer nav ul {
 }
  
 footer li {
-  background: url(/images/divider.gif) no-repeat center left;
+  background-image: url(/images/spriteme1.png);
+  background-position: -10px -404px;
   padding: 5px 15px;
   float: left;
   display: block;
@@ -413,12 +419,15 @@ table tbody td {
 
 tbody td.yes {
   height: 15px;
-  background: url(/images/tickcross.png) no-repeat 50% 15px;
+  background-image: url(/images/spriteme1.png);
+  background-position: 26px -308px;
 }
 
 tbody td.no {
   height: 15px;
-  background: url(/images/tickcross.png) no-repeat 50% -29px;
+  background-image: url(/images/spriteme1.png);
+  background-position: 26px -308px;
+
 }
 
 tbody td:nth-child(2n) {
