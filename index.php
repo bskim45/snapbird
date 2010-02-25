@@ -214,7 +214,7 @@ if ($type == 'list') {
       <ul id="navlinks">
         <li><a href="http://snapbird.org">Search Twitter's history</a></li>
         <!-- <li><a href="/about">About</a></li> --> <!-- Coming soon -->
-        <li><a href="http://github.com/remy/snapbird">Fork me on Github</a></li>
+        <li><a href="http://github.com/remy/snapbird">Fork on Github</a></li>
         <?php if ($twitterInfo != null) : ?>
         <li><a id="logout" href="/">Logout</a></li>
         <?php endif ?>

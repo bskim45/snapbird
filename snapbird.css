@@ -282,6 +282,7 @@ footer ul li:first-child {
 }
  
 footer a {
+  text-shadow: 0px 1px 3px #505050;
   color: #E6FFE1;
   text-decoration: none;
 }
