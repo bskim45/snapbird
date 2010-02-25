@@ -126,12 +126,12 @@ if ($type == 'list') {
             http://snapbird.org/ it is.
           </li>
           <li>
-            <img src="http://twivatar.org/rem/mini" />
-            Giggling at the spikes in traffic to http://isjeremyeatingtoast.com coinciding with @adactio's tweets: http://snapbird.org/adactio/toast
+            <img src="http://twivatar.org/jordanraynor/mini" />
+            I give my favorite Twitter app (http://SnapBird.org) all the credit RT @aaalex32: thank you @jordanraynor for coming to my twitter rescue!
           </li>
           <li>
-            <img src="http://twivatar.org/xosecastro/mini" />
-            I've just found http://snapbird.org, a site to search tweets among the people you follow on Twitter. Thanks to Aardvark @vark
+            <img src="http://twivatar.org/Eyaare/mini" />
+            BIG thanks to @rem, @nicepaul and @stompfrog! http://snapbird.org if you ever want to find any really old tweets.
           </li>
         </ul>
       </aside>
