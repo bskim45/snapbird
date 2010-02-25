@@ -163,7 +163,7 @@ $('form').submit(function (e) {
       search = $('#search').val(),
       filter = twitterlib.filter.format(search);
 
-  screen_name = type == 'timeline' || type == 'favs' ? $('#screen_name').val() : $auth.text();
+  screen_name = $.trim(type == 'timeline' || type == 'favs' ? $('#screen_name').val() : $auth.text());
 
 
   $('body').removeClass('intro').addClass('results loading');
