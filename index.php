@@ -115,28 +115,17 @@ if ($type == 'list') {
       <aside id="tweets_about_snapbird">
         <h2>Tweets about Snap Bird</h2>
         <ul>
+          <?php $tweets = json_decode(file_get_contents('snapbird-favs.json'));
+          for ($i = 0; $i < count($tweets) && $i < 5; $i++) :
+            $tweet = $tweets[$i];
+          ?>
           <li>
-            <a href="#">
-            <img src="http://twivatar.org/rem/mini" />
-            Giggling at the spikes in traffic to http://isjeremyeatingtoast.com coinciding with @adactio&rsquo;s tweets: http://snapbird.org/adactio/toast
+            <a title="By @<?=$tweet->user->screen_name?>" href="http://twitter.com/<?=$tweet->user->screen_name?>/statuses/<?=$tweet->id?>">
+              <img alt="By @<?=$tweet->user->screen_name?>" src="<?=preg_replace("/_normal/", '_mini', $tweet->user->profile_image_url)?>" />
+              <?=$tweet->text?>
             </a>
           </li>
-          <li>
-            <img src="http://twivatar.org/xosecastro/mini" />
-            I&rsquo;ve just found http://snapbird.org, a site to search tweets among the people you follow on Twitter. Thanks to Aardvark @vark
-          </li>
-          <li>
-            <img src="http://twivatar.org/shauninman/mini">
-            http://snapbird.org/ it is.
-          </li>
-          <li>
-            <img src="http://twivatar.org/jordanraynor/mini" />
-            I give my favorite Twitter app (http://SnapBird.org) all the credit RT @aaalex32: thank you @jordanraynor for coming to my twitter rescue!
-          </li>
-          <li>
-            <img src="http://twivatar.org/Eyaare/mini" />
-            BIG thanks to @rem, @nicepaul and @stompfrog! http://snapbird.org if you ever want to find any really old tweets.
-          </li>
+          <?php endfor ?>
         </ul>
       </aside>
       <h2>Where can you search?</h2>
