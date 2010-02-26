@@ -139,7 +139,7 @@ var $screen_name_label = $('#screen_name_label'),
 
 $('#type').bind('change keyup', function () {
   var authRequired = !(this.value == 'timeline' || this.value == 'favs');
-  $screen_name_label.text(authRequired ? 'You' : 'Who');
+  $screen_name_label.text(authRequired ? 'You' : 'Who?');
   if (authRequired && !$auth.length) {
     // show lightbox
     $('body').addClass('auth');
