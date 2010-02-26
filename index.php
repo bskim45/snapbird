@@ -95,18 +95,18 @@ if ($type == 'list') {
     </article>
     <div id="worm-and-bird" class="showinfo">
       <input type="submit" value="find it" id="findit-btn" />
-      <a id="logininfo" href="<?=$twitterObj->getAuthorizationUrl()?>">
         <?php if ($twitterInfo == null) : ?>
-        <span id="info"></span>
-        <div id="authenticate-info">
-          <p>Twitter allows only <em><strong>you</strong></em> to search within your direct messages, friends&rsquo; tweets, etc.</p>
-          <p>Click here to let Twitter know we&rsquo;re authentically searching on your behalf.</p>
-        </div>
-        <span id="authenticate-button" class="button">Authenticate with <span class="twitter-logo">Twitter</span></span>
+        <a id="logininfo" href="<?=$twitterObj->getAuthorizationUrl()?>">
+          <span id="info"></span>
+          <div id="authenticate-info">
+            <p>Twitter allows only <em><strong>you</strong></em> to search within your direct messages, friends&rsquo; tweets, etc.</p>
+            <p>Click here to let Twitter know we&rsquo;re authentically searching on your behalf.</p>
+          </div>
+          <span id="authenticate-button" class="button">Authenticate with <span class="twitter-logo">Twitter</span></span>
+        </a>
         <?php else : ?>
-        <span id="authenticate-button" class="button"><strong><?= $twitterInfo->screen_name ?></strong> authenticated</span>
+        <span id="authenticate-button" class="button"><strong>@<?= $twitterInfo->screen_name ?></strong> authenticated</span>
         <?php endif ?>
-      </a>
       <div id="bird"></div>
     </div>
   </form>
