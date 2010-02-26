@@ -148,7 +148,7 @@ $('#type').bind('change keyup', function () {
     $auth.show();
   } else if (!authRequired && $auth.is(':visible')) { // not checked
     $auth.hide();
-    $screen_name.removeAttr('disabled').val( $screen_name.data('old') );      
+    $screen_name.removeAttr('disabled').val( $screen_name.data('old') );
   }
   
   $('#more a').text('Search next ' + (this.value == 'favs' ? 100 : '1,000') + ' tweets');
