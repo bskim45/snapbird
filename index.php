@@ -51,7 +51,7 @@ if ($type == 'list') {
 -->
 <html lang="en">
 <head>
-<title>Snap Bird - search your tweets</title>
+<title>Snap Bird - search twitter's history</title>
 <meta charset="utf-8" />
 <link rel="shortcut icon" href="/images/snapbird-icon.png" />
 <link rel="apple-touch-icon" href="/images/snapbird-icon.png" />
