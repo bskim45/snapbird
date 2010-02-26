@@ -64,7 +64,7 @@ if ($type == 'list') {
   <div id="content">
   <header>
     <h1><a href="/">Snap Bird</a></h1>
-    <h2>Search beyond Twitter's history</h2>
+    <h2>Search beyond Twitter&rsquo;s history</h2>
   </header>
   <form>
     <article id="controls">
@@ -72,9 +72,9 @@ if ($type == 'list') {
         <div>
           <label for="type">Search</label>
           <select name="type" id="type">
-            <option <?=$type['timeline']?> value="timeline">Someones timeline</option>
-            <option <?=$type['favs']?> value="favs">Someones favourites</option>
-            <option <?=$type['withfriends']?> value="withfriends">Your friends' tweets</option>
+            <option <?=$type['timeline']?> value="timeline">Someone&rsquo;s timeline</option>
+            <option <?=$type['favs']?> value="favs">Someone&rsquo;s favourites</option>
+            <option <?=$type['withfriends']?> value="withfriends">Your friends&rsquo; tweets</option>
             <option <?=$type['mentions']?> value="mentions">Tweets mentioning you</option>
             <option <?=$type['dm_sent']?> value="dm_sent">Your sent direct messages</option>
             <option <?=$type['dm']?> value="dm">Your received direct messages</option>
@@ -96,12 +96,16 @@ if ($type == 'list') {
     <div id="worm-and-bird" class="showinfo">
       <input type="submit" value="find it" id="findit-btn" />
       <a id="logininfo" href="<?=$twitterObj->getAuthorizationUrl()?>">
+        <?php if ($twitterInfo == null) : ?>
         <span id="info"></span>
         <div id="authenticate-info">
-          <p>Twitter allows only <em><strong>you</strong></em> to search within your direct messages, friends' tweets, etc.</p>
-          <p>Click here to let Twitter know we're authentically searching on your behalf.</p>
+          <p>Twitter allows only <em><strong>you</strong></em> to search within your direct messages, friends&rsquo; tweets, etc.</p>
+          <p>Click here to let Twitter know we&rsquo;re authentically searching on your behalf.</p>
         </div>
-        <span id="authenticate-button" class="button">Authenticate with <span class="twitter-logo">Twitter</span></span>        
+        <span id="authenticate-button" class="button">Authenticate with <span class="twitter-logo">Twitter</span></span>
+        <?php else : ?>
+        <span id="authenticate-button" class="button"><strong><?= $twitterInfo->screen_name ?></strong> authenticated</span>
+        <?php endif ?>
       </a>
       <div id="bird"></div>
     </div>
@@ -114,12 +118,12 @@ if ($type == 'list') {
           <li>
             <a href="#">
             <img src="http://twivatar.org/rem/mini" />
-            Giggling at the spikes in traffic to http://isjeremyeatingtoast.com coinciding with @adactio's tweets: http://snapbird.org/adactio/toast
+            Giggling at the spikes in traffic to http://isjeremyeatingtoast.com coinciding with @adactio&rsquo;s tweets: http://snapbird.org/adactio/toast
             </a>
           </li>
           <li>
             <img src="http://twivatar.org/xosecastro/mini" />
-            I've just found http://snapbird.org, a site to search tweets among the people you follow on Twitter. Thanks to Aardvark @vark
+            I&rsquo;ve just found http://snapbird.org, a site to search tweets among the people you follow on Twitter. Thanks to Aardvark @vark
           </li>
           <li>
             <img src="http://twivatar.org/shauninman/mini">
@@ -156,7 +160,7 @@ if ($type == 'list') {
             <td class="yes"></td>
           </tr>
           <tr>
-            <td>Within only your friends' tweets</td>
+            <td>Within only your friends&rsquo; tweets</td>
             <td class="no"></td>
             <td class="yes"></td>
           </tr>
@@ -166,7 +170,7 @@ if ($type == 'list') {
             <td class="yes"></td>
           </tr>
           <tr>
-            <td>Within any user's favourites</td>
+            <td>Within any user&rsquo;s favourites</td>
             <td class="no"></td>
             <td class="yes"></td>
           </tr>
@@ -195,14 +199,14 @@ if ($type == 'list') {
       <ul></ul>
     
       <div id="loading">
-        <p>Loading results<br />from older tweets</p>
+        <p>Searching through<br />older tweets</p>
         <p class="num">0-200</p>
         <p>Hit <em>escape</em> to cancel</p>
       </div>
     
       <div id="more">
         <p class="searched">200 tweets searched.</p>
-        <p>Haven't found what you're looking for?</p>
+        <p>Haven&rsquo;t found what you&rsquo;re looking for?</p>
         <a class="button light" href="#more">Search next 1,000 tweets</a>
       </div>
     </div>
@@ -212,7 +216,7 @@ if ($type == 'list') {
   <footer>
     <nav>
       <ul id="navlinks">
-        <li><a href="http://snapbird.org">Search Twitter's history</a></li>
+        <li><a href="http://snapbird.org">Search Twitter&rsquo;s history</a></li>
         <!-- <li><a href="/about">About</a></li> --> <!-- Coming soon -->
         <li><a href="http://github.com/remy/snapbird">Fork on Github</a></li>
         <?php if ($twitterInfo != null) : ?>
@@ -223,7 +227,7 @@ if ($type == 'list') {
     <ul id="credit">
       <li><a href="http://twitter.com/rem">Built by @rem</a></li>
       <li><a href="http://twitter.com/nicepaul">Designed by @nicepaul</a></li>
-      <li><a href="http://twitter.com/stompfrog">Illustrated @stompfrog</a></li>
+      <li><a href="http://twitter.com/stompfrog">Artwork by @stompfrog</a></li>
     </ul>
   </footer>
   <div id="auth">
