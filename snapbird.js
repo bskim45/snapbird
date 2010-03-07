@@ -67,6 +67,7 @@ var $tweets = $('#tweets ul'),
       dm_sent: 'sent direct messages'
     };
 
+twitterlib.cache(true);
 twitterlib.custom('withfriends', '/proxy.php?page=%page%');
 twitterlib.custom('dm', '/proxy.php?page=%page%&type=direct_messages');
 twitterlib.custom('dm_sent', '/proxy.php?page=%page%&type=direct_messagesSent');
