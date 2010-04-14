@@ -184,7 +184,7 @@ $('form').submit(function (e) {
     
     $('#permalink').attr('href', '/' + screen_name + '/' + type + '/' + encodeURIComponent(search));
     
-    $tweets.append('<li class="searchterm">Searching <em><strong>' + escapeTags(screen_name) + '</strong>&rsquo;s ' + type_string[type] + '</em> for <strong>' + search.replace(/<>/g, function (m) { return m == '<' ? '&lt;' : '&gt;'; }) + '</strong></li>');
+    $tweets.append('<li class="searchterm">Searching <em><strong>' + escapeTags(screen_name) + '</strong>&rsquo;s ' + type_string[type] + '</em> for <strong>' + escapeTags(search) + '</strong></li>');
     $('body').addClass('results');
             
     // cancel any outstanding request, and kick off a new one
@@ -278,7 +278,7 @@ $('form').submit(function (e) {
 });
 
 function escapeTags(s) {
-  return (s||'').replace(/[<>]/g, function (m) { return {'<':'&lt;', '>': '&gt;'}[m]; });
+  return (s||'').replace(/[<>]/g, function (m) { return {'<':'&lt;'}[m]||'&gt;'; });
 }
 
 function two(s) {
