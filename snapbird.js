@@ -186,7 +186,7 @@ $('form').submit(function (e) {
     
     $tweets.append('<li class="searchterm">Searching <em><strong>' + escapeTags(screen_name) + '</strong>&rsquo;s ' + type_string[type] + '</em> for <strong>' + escapeTags(search) + '</strong></li>');
     $('body').addClass('results');
-            
+    
     // cancel any outstanding request, and kick off a new one
     twitterlib.cancel()[type](screen_name, { filter: search }, function (data, options) {
       total_searched += options.originalTweets.length;
