@@ -234,7 +234,7 @@ if ($type == 'list') {
   </div>
 </div>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-<script src="/twitterlib/twitterlib.min.js?2011-01-17"></script>
+<script src="/twitterlib/twitterlib.min.js?2011-02-21"></script>
 <script src="/snapbird.js?2009-12-31"></script>
 <script>
   var _gaq = _gaq || [];
