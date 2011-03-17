@@ -188,7 +188,7 @@ $('form').submit(function (e) {
     $('body').addClass('results');
     
     // cancel any outstanding request, and kick off a new one
-    twitterlib.cancel()[type](screen_name, { filter: search }, function (data, options) {
+    twitterlib.cancel()[type](screen_name, { filter: search, rts: true }, function (data, options) {
       total_searched += options.originalTweets.length;
       
       setStatus(total_tweets + data.length, total_searched, options.originalTweets.length ? options.originalTweets[options.originalTweets.length - 1].created_at : null);
