@@ -28,6 +28,11 @@ if ($_COOKIE['token'] && file_exists('auth/oauth/' . $_COOKIE['token'])) {
   $timeline = $twitterObj->$method(array('count' => 200, 'page' => $page));
 
   $data = json_encode($timeline->response);
+
+  // if twitter is over capcity, try to avoid it borking
+  if (stripos($data, 'Over capacity') !== -1) {
+    $data = '{}';
+  }
 } 
 
 echo $callback . '(' . $data . ')';
