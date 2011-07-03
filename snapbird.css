@@ -114,10 +114,6 @@ div label {
   text-align: right;
 }
 
-option, select {
-  text-transform: uppercase;
-}
-
 #auth {
   display: none;
 }
