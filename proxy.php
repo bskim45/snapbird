@@ -31,9 +31,10 @@ if ($_COOKIE['token'] && file_exists('auth/oauth/' . $_COOKIE['token'])) {
 
   // if twitter is over capcity, try to avoid it borking
   if (stripos($data, 'Over capacity') !== false) {
-    $data = '{}';
+    $data = '{ "error": "Over capacity", results: [] }';
   } else {
     error_log($data);
+    $data = '{ "error": "data returned empty", results: [] }';
   }
 } 
 

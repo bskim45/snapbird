@@ -62,6 +62,7 @@ var $tweets = $('#tweets ul'),
       timeline : 'tweets', 
       favs: 'favourites', 
       withfriends: 'friends&rsquo; tweets', 
+      mentions: 'mentions',
       list: 'member tweets',
       dm: 'received direct messages',
       dm_sent: 'sent direct messages'
