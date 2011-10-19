@@ -53,6 +53,7 @@ $('body').keyup(function (event) {
 var $tweets = $('#tweets ul'), 
     screen_name = url = state = '', 
     page = 1, 
+    limit = 100, // performs better and avoids 502!
     pageMax = null,
     total_tweets = 0, 
     timer = null,
@@ -130,7 +131,7 @@ function setStatus(matched, searched, oldest) {
 }
 
 function updateLoading(type, currentTotal) {
-  var inc = 200;
+  var inc = limit;
   if (type == 'favs') inc = 20;
   $('#loading .num').text(total_searched + '-' + (total_searched+inc));
 }
@@ -189,7 +190,7 @@ $('form').submit(function (e) {
     $('body').addClass('results');
     
     // cancel any outstanding request, and kick off a new one
-    twitterlib.cancel()[type](screen_name, { filter: search, rts: true }, function (data, options) {
+    twitterlib.cancel()[type](screen_name, { filter: search, rts: true, limit: limit }, function (data, options) {
       total_searched += options.originalTweets.length;
       
       setStatus(total_tweets + data.length, total_searched, options.originalTweets.length ? options.originalTweets[options.originalTweets.length - 1].created_at : null);
@@ -201,7 +202,7 @@ $('form').submit(function (e) {
         clearTimeout(timer);
         timer = setTimeout(function () {
           twitterlib.next();
-        }, 1000);          
+        }, 500);          
         return;
       } else if (total_tweets > 0 && data.length == 0 && options.originalTweets.length > 0 && pageMax > 0) {
         pageMax--;
@@ -209,7 +210,7 @@ $('form').submit(function (e) {
         clearTimeout(timer);
         timer = setTimeout(function () {
           twitterlib.next();
-        }, 1000);
+        }, 500);
         return;
       }
       
