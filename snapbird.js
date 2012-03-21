@@ -160,7 +160,7 @@ $('#type').bind('change keyup', function () {
 
 $('form').submit(function (e) {
   e.preventDefault();
-  
+
   var newstate = $(this).serialize(),
       type = $(this).find('#type').val(),
       search = $('#search').val(),
@@ -184,7 +184,10 @@ $('form').submit(function (e) {
     updateLoading(type);
     $tweets.empty();
     
-    $('#permalink').attr('href', '/' + screen_name + '/' + type + '/' + encodeURIComponent(search));
+    var permalink = '/' + screen_name + '/' + type + '/' + encodeURIComponent(search);
+    $('#permalink').attr('href', permalink);
+    _gaq.push(['_trackPageview', permalink]);
+
     
     $tweets.append('<li class="searchterm">Searching <em><strong>' + escapeTags(screen_name) + '</strong>&rsquo;s ' + type_string[type] + '</em> for <strong>' + escapeTags(search) + '</strong></li>');
     $('body').addClass('results');
