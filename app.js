@@ -24,8 +24,6 @@ try {
   configFile = {};
 }
 
-console.log(configFile);
-
 // Then configure!
 var config = {
   port: parseInt(process.argv[2], 10) ||
@@ -45,8 +43,6 @@ var config = {
             'keyboard fricking cat'
   }
 };
-
-console.log(config);
 
 /**
  * Passport express
