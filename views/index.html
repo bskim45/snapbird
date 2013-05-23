@@ -18,7 +18,7 @@
 <![endif]-->
 <link rel="stylesheet" href="/css/snapbird.css" type="text/css" />
 </head>
-<body class="intro">
+<body class="intro logged-out">
   <div id="content">
   <header>
     <h1><a href="/">Snap Bird</a></h1>
@@ -40,7 +40,6 @@
         </div>
         <div>
           <label for="screen_name" id="screen_name_label">Who</label>
-          <span id="auth_screen_name">TWITTER SCREEN NAME</span>
           <input class="screen_name" type="text" id="screen_name" name="screen_name" placeholder="username" value="" />
         </div>
         <div>
@@ -51,14 +50,15 @@
     </article>
     <div id="worm-and-bird" class="showinfo">
       <input type="submit" value="find it" id="findit-btn" />
-        <a id="logininfo" href="/auth/twitter">
-          <span id="info"></span>
-          <div id="authenticate-info">
-            <p>Twitter allows only <em><strong>you</strong></em> to search within your direct messages, friends&rsquo; tweets, etc.</p>
-            <p>Click here to let Twitter know we&rsquo;re authentically searching on your behalf.</p>
-          </div>
-          <span id="authenticate-button" class="button">Authenticate with <span class="twitter-logo">Twitter</span></span>
-        </a>
+      <a id="logininfo" href="/auth/twitter">
+        <span id="info"></span>
+        <div id="authenticate-info">
+          <p>Twitter allows only <em><strong>you</strong></em> to search within your direct messages, friends&rsquo; tweets, etc.</p>
+          <p>Click here to let Twitter know we&rsquo;re authentically searching on your behalf.</p>
+        </div>
+        <span class="authenticate-button show-logged-out button">Authenticate with <span class="twitter-logo">Twitter</span></span>
+      </a>
+      <span class="authenticate-button show-logged-in button">Hey <span class="my-username">there</span>!</span>
       <div id="bird"></div>
     </div>
   </form>
@@ -148,7 +148,7 @@
         <li><a href="http://snapbird.org">Search Twitter&rsquo;s history</a></li>
         <!-- <li><a href="/about">About</a></li> --> <!-- Coming soon -->
         <li><a href="http://github.com/remy/snapbird">Fork on Github</a></li>
-        <li><a id="logout" href="/">Logout</a></li>
+        <li class="show-logged-in"><a id="logout" href="/">Logout</a></li>
       </ul>
     </nav>
     <ul id="credit">
@@ -163,16 +163,18 @@
     <div id="login">
       <div>
         <div>
-          <p>To search within your own friends&rsquo; tweets and other personal streams to you, you need to tell Twitter it&rsquo;s OK for us to search.</p>
-          <p>Log in with Twitter and on the next screen press &ldquo;allow&rdquo;.</p>
-          <p><a class="button" href="<?=$twitterObj->getAuthorizationUrl()?>">Log in using <span class="twitter-logo">Twitter.com</span></a> <a class="button cancel" href="#">Cancel</a></p>
+          <h2>Hey!</h2>
+          <p>To search your tweets, DMs and friend's tweets, Snapbird needs access to your Twitter account. Please login below.</p>
+          <p><strong>We will <em>never</em> post to your account. Promise.</strong></p>
+          <p><a class="button" href="/auth/twitter">Log in using <span class="twitter-logo">Twitter.com</span></a>
         </div>
       </div>
     </div>
   </div>
 </div>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/twitterlib.js/1.0.8/twitterlib.min.js"></script>
+<script src="/js/store.js"></script>
 <script src="/js/snapbird.js"></script>
 <script>
   var _gaq = _gaq || [];

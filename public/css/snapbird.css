@@ -21,6 +21,13 @@ fieldset {
   border: 0;
 }
 
+.logged-out .show-logged-in {
+  display: none;
+}
+.logged-in .show-logged-out {
+  display: none;
+}
+
 #content {
   position: relative;
   background: url(/images/main-bg.jpg) no-repeat top left;
@@ -147,7 +154,7 @@ h2 {
   right: 0;
 }
 
-#findit-btn { 
+#findit-btn {
   background: url(/images/spriteme1.png) no-repeat -10px -106px;
   text-indent: -9999px;
   border: 0;
@@ -158,7 +165,7 @@ h2 {
   cursor: pointer;
 }
 
-#findit-btn:active { 
+#findit-btn:active {
   background-position: -10px -104px;
 }
 
@@ -192,9 +199,10 @@ h2 {
   display: inline-block;
   line-height: 25px;
   padding: 0 8px;
+  cursor: pointer;
 }
 
-#authenticate-button {
+.authenticate-button {
   min-width: 150px;
   position: absolute;
   top: 53px;
@@ -257,21 +265,21 @@ footer {
   margin: 0 auto;
   position: relative;
 }
- 
+
 footer ul {
   position: absolute;
   right: 0;
-  padding: 10px 0;  
+  padding: 10px 0;
 }
- 
+
 footer nav ul {
   left: 0;
 }
- 
+
 #credit {
   text-transform: lowercase;
 }
- 
+
 footer li {
   background-image: url(/images/spriteme1.png);
   background-position: -10px -404px;
@@ -279,17 +287,17 @@ footer li {
   float: left;
   display: block;
 }
- 
+
 footer ul li:first-child {
   background: none;
 }
- 
+
 footer a {
   text-shadow: 0px 1px 3px #505050;
   color: #E6FFE1;
   text-decoration: none;
 }
- 
+
 footer nav a {
   font-weight: bold;
 }
@@ -474,7 +482,7 @@ body.results #results {
   -moz-border-radius-bottomright: 15px;
   position: relative;
 }
- 
+
 #tweets ul {
   padding-top: 15px;
   min-height: 70px;
@@ -482,7 +490,7 @@ body.results #results {
   margin: 0;
   margin-bottom: 20px;
 }
- 
+
 #tweets aside {
   position: absolute;
   margin-left: 480px;
@@ -512,7 +520,7 @@ body.results #results {
   font-weight: bold;
   margin-bottom: 5px;
 }
- 
+
 /* twitter styles */
 #tweets li {
   background: url(/images/dots.gif) repeat-x left bottom;
@@ -522,30 +530,30 @@ body.results #results {
 #tweets li.more {
   border-bottom: 1px solid #ccc;
   background: none;
-} 
- 
+}
+
 #tweets ul a {
   color: #2277bb;
 }
- 
+
 #tweets ul a:hover, #tweets a:active, #tweets a:focus, #tweets a {
   text-decoration: none;
 }
- 
+
 #tweets ul a:hover {
   text-decoration: underline;
 }
- 
+
 #tweets ul a img {
   border: 0;
 }
- 
+
 #tweets li {
   padding: 0;
   margin: 0;
   list-style: none;
 }
- 
+
 .tweet {
   clear: left;
   min-height: 48px;
@@ -553,40 +561,40 @@ body.results #results {
   line-height: 1.1;
   position: relative;
 }
- 
+
 #tweets li.searchterm {
   font-size: 22px;
   padding-bottom: 20px;
 }
- 
+
 .vcard {
   float: left;
 }
- 
+
 .hentry {
   margin-left: 58px;
 }
- 
+
 .hentry .meta {
   color: #999;
   font-size: 0.764em;
   margin: 3px 0 0;
   display: block;
 }
- 
+
 #tweets .meta a {
   color: #999;
 }
- 
+
 .tweet:hover {
 /*  background-color: #F7F7F7;*/
 }
- 
+
 #status {
   font-size: 14px;
   color: #565d42;
 }
- 
+
 #status p {
   margin: 5px 0 15px 0;
 }
@@ -658,11 +666,11 @@ body.loading #more {
 #auth {
   display: none;
 }
- 
+
 .auth #auth {
   display: block;
 }
- 
+
 #overlay {
   position: fixed;
   top: 0;
@@ -674,37 +682,38 @@ body.loading #more {
   -moz-opacity: 0.4;
   filter:alpha(opacity=40);
 }
- 
+
 #login {
   width: 500px;
   margin: 0 auto;
 }
- 
+
+#login h2 {
+  padding: 0;
+  margin: 20px 0;
+  font-size: 1.5em;
+}
+
 #login > div {
-/*  border: 10px solid rgba(0,0,0,0.5);*/
-  -webkit-border-radius: 10px;
-  -moz-border-radius: 10px;
-/*  background: rgba(0,0,0,0.4);*/
+  border-radius: 10px;
   background: rgba(191, 217, 22, 0.4);
   position: absolute;
   top: 200px;
   width: 500px;
   padding: 10px;
 }
- 
+
 #login div div {
   color: #000;
   padding: 10px 30px;
   background: rgb(235, 244, 209);
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
 }
- 
+
 #login p {
   line-height: 28px;
   margin: 20px 0;
 }
- 
+
 #login a {
   text-decoration: none;
 }

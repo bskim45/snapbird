@@ -1,68 +1,20 @@
-var store = (function () {
-  var useStorage = !!window.localStorage;
-  
-  return {
-    get: function (key) {
-      var value, ca, c, i;
-
-      if (useStorage) {
-        value = window.localStorage.getItem(key);
-      } else {
-        ca = document.cookie.split(';');
-        for (i=0; i < ca.length; i++) {
-          c = ca[i];
-          while (c.charAt(0)==' ') {
-            c = c.substring(1, c.length);
-          }
-          if (c && c.indexOf(key) == 0) {
-            value = c.substring(key.length,c.length);
-            break;
-          }
-        }
-      }
-
-      if (value == null) {
-        value == "";
-      }
-
-      return value;
-    },
-    set: function (key, value) {
-      if (useStorage) {
-        try {
-          window.localStorage.setItem(key, value);
-        } catch (e) {
-          // could be a QUOTA_EXCEEDED_ERR (for some reason Webkit is giving me this, just needs a restart and it goes away...)
-        }
-      } else {
-        document.cookie = key + "=" + value + "; path=/";
-      }      
-    }
-  };
-})();
-
-$('body').keyup(function (event) {
-  if (event.which == 27) {
-    clearTimeout(timer);
-    $('body').removeClass('auth').removeClass('loading');
-    twitterlib.cancel();
-  }
-});
+(function (window, document, undefined) {
 
 // very hacky code - sorry!
-var $tweets = $('#tweets ul'), 
-    screen_name = url = state = '', 
-    page = 1, 
+var $tweets = $('#tweets ul'),
+    $body = $('body'),
+    screen_name = url = state = '',
+    page = 1,
     limit = 100, // performs better and avoids 502!
     pageMax = null,
-    total_tweets = 0, 
+    total_tweets = 0,
     timer = null,
     total_searched = 0,
-    statusTop = null, 
-    type_string = { 
-      timeline : 'tweets', 
-      favs: 'favourites', 
-      withfriends: 'friends&rsquo; tweets', 
+    statusTop = null,
+    type_string = {
+      timeline : 'tweets',
+      favs: 'favourites',
+      withfriends: 'friends&rsquo; tweets',
       mentions: 'mentions',
       list: 'member tweets',
       dm: 'received direct messages',
@@ -70,18 +22,23 @@ var $tweets = $('#tweets ul'),
     };
 
 twitterlib.cache(true);
-twitterlib.custom('withfriends', '/proxy.php?page=%page%');
-twitterlib.custom('dm', '/proxy.php?page=%page%&type=direct_messages');
-twitterlib.custom('dm_sent', '/proxy.php?page=%page%&type=direct_messagesSent');
-twitterlib.custom('mentions', '/proxy.php?page=%page%&type=statusesMentions');
 
-$('#more a').live('click', function () {
+$body.keyup(function (event) {
+  // esc
+  if (event.which == 27) {
+    clearTimeout(timer);
+    $body.removeClass('loading');
+    twitterlib.cancel();
+  }
+});
+
+$('#more a').on('click', function () {
   pageMax = 5;
   $('form').submit();
   return false;
 });
 
-$(function () {  
+$(function () {
   var msie6 = $.browser == 'msie' && $.browser.version < 7;
   if (!msie6) {
     $(window).scroll(function (event) {
@@ -97,22 +54,38 @@ $(function () {
         } else {
           // otherwise remove it
           $('#tweets aside').removeClass('fixed');
-        }        
+        }
       }
     });
-  }  
+  }
 });
+
+/**
+ * Login utilities
+ */
+
+var isLoggedIn = function () {
+  return $body.hasClass('logged-in');
+};
+
+var requestLogin = function () {
+  if (!isLoggedIn()) $body.addClass('auth');
+};
+
+/**
+ * Snapbird
+ */
 
 var $status = $('#tweets aside p');
 function setStatus(matched, searched, oldest) {
   var date = new Date(Date.parse(oldest)),
       hour = date.getHours(),
       niceSearched = (searched+'').replace(/([0-9]+)([0-9]{3})/, "$1,$2");
-  
+
   $status.eq(0).text(matched + (matched == 1 ? ' tweet' : ' tweets'));
   // cheap thousand separator
   $status.eq(1).text(niceSearched + ' searched');
-  
+
   if (oldest != undefined) {
     $status.eq(2).text(twitterlib.time.date(date));
 
@@ -124,9 +97,9 @@ function setStatus(matched, searched, oldest) {
       $('#time').text('evening');
     } else {
       $('#time').text('night');
-    }    
+    }
   }
-  
+
   $('#more p.searched').text(niceSearched + ' tweets searched.');
 }
 
@@ -136,30 +109,9 @@ function updateLoading(type, currentTotal) {
   $('#loading .num').text(total_searched + '-' + (total_searched+inc));
 }
 
-var $screen_name_label = $('#screen_name_label'),
-    $auth = $('#auth_screen_name'),
-    $screen_name = $('#screen_name');
-
-$('#type').bind('change keyup', function () {
-  var authRequired = !(this.value == 'timeline' || this.value == 'favs');
-  $screen_name_label.text(authRequired ? 'You' : 'Who?');
-  if (authRequired && !$auth.length) {
-    // show lightbox
-    $('body').addClass('auth');
-  } else if (authRequired && $auth.is(':hidden')) {
-    $screen_name.attr('disabled', true).data('old', $screen_name.val()).val(' '); // space forces the placeholder to hide
-    $auth.show();
-  } else if (!authRequired && $auth.is(':visible')) { // not checked
-    $auth.hide();
-    $screen_name.removeAttr('disabled').val( $screen_name.data('old') );
-  }
-  
-  $('#more a').text('Search next ' + (this.value == 'favs' ? 100 : '1,000') + ' tweets');
-  
-}).trigger('change');
-
 $('form').submit(function (e) {
   e.preventDefault();
+  if (!isLoggedIn()) return requestLogin();
 
   var newstate = $(this).serialize(),
       type = $(this).find('#type').val(),
@@ -168,13 +120,12 @@ $('form').submit(function (e) {
 
   screen_name = $.trim(type == 'timeline' || type == 'favs' ? $('#screen_name').val() : $auth.text());
 
-
   $('body').removeClass('intro').addClass('results loading');
 
   if (state != newstate) {
     state = newstate;
     store.set('screen_name', screen_name);
-    
+
     if (screen_name.match(/\//)) {
       type = 'list';
     }
@@ -183,21 +134,21 @@ $('form').submit(function (e) {
     total_searched = 0;
     updateLoading(type);
     $tweets.empty();
-    
+
     var permalink = '/' + screen_name + '/' + type + '/' + encodeURIComponent(search);
     $('#permalink').attr('href', permalink);
     _gaq.push(['_trackPageview', permalink]);
 
-    
+
     $tweets.append('<li class="searchterm">Searching <em><strong>' + escapeTags(screen_name) + '</strong>&rsquo;s ' + type_string[type] + '</em> for <strong>' + escapeTags(search) + '</strong></li>');
     $('body').addClass('results');
-    
+
     // cancel any outstanding request, and kick off a new one
     twitterlib.cancel()[type](screen_name, { filter: search, rts: true, limit: limit }, function (data, options) {
       total_searched += options.originalTweets.length;
-      
+
       setStatus(total_tweets + data.length, total_searched, options.originalTweets.length ? options.originalTweets[options.originalTweets.length - 1].created_at : null);
-      
+
       // if there's no matched results, but there are raw Tweets, do another call - and keep going until we hit something
       if (data.length == 0 && total_tweets == 0 && options.originalTweets.length > 0) {
         // check if we're doing a page max
@@ -205,7 +156,7 @@ $('form').submit(function (e) {
         clearTimeout(timer);
         timer = setTimeout(function () {
           twitterlib.next();
-        }, 500);          
+        }, 500);
         return;
       } else if (total_tweets > 0 && data.length == 0 && options.originalTweets.length > 0 && pageMax > 0) {
         pageMax--;
@@ -216,20 +167,20 @@ $('form').submit(function (e) {
         }, 500);
         return;
       }
-      
+
       if (total_tweets) {
         $tweets.find('li:last').addClass('more'); // hard split line
       }
-                    
+
       var i = 0, j = 0, t, r, scrollPos = null, searches = filter.and.concat(filter.or).join('|');
-      
+
       for (i = 0; i < data.length; i++) {
         t = twitterlib.render(data[i], i);
         $tweets.append(t);
-        
+
         if (total_tweets == 0 && i == 0) {
           $tweets.find('li:first').addClass('first');
-        } 
+        }
 
         // really tricky code here, we're finding *this* and all nested text nodes
         // then replacing them with our new <strong>text</strong> elements
@@ -255,7 +206,7 @@ $('form').submit(function (e) {
           }
         });
       }
-      
+
       scrollPos = $tweets.find('li:last').offset().top;
       if (scrollPos != null) {
         setTimeout(function () {
@@ -263,23 +214,23 @@ $('form').submit(function (e) {
           });
         }, 100);
       }
-      
+
       total_tweets += data.length;
       pageMax = null;
-      
+
       $('body').removeClass('loading');
-      
+
       if (statusTop == null) {
-        statusTop = $('#tweets aside').offset().top - parseFloat($('#tweets aside').css('margin-top').replace(/auto/, 0));            
+        statusTop = $('#tweets aside').offset().top - parseFloat($('#tweets aside').css('margin-top').replace(/auto/, 0));
       }
-      
+
     });
 
   } else {
     updateLoading(type);
     clearTimeout(timer);
     timer = setTimeout(function () { twitterlib.cancel().next(); }, 250);
-  } 
+  }
 });
 
 function escapeTags(s) {
@@ -300,7 +251,7 @@ function updateRequestStatus() {
 
 function getQuery(s) {
   var query = {};
-  
+
   s.replace(/\b([^&=]*)=([^&=]*)\b/g, function (m, a, d) {
     if (typeof query[a] != 'undefined') {
       query[a] += ',' + d;
@@ -308,7 +259,7 @@ function getQuery(s) {
       query[a] = d;
     }
   });
-  
+
   return query;
 }
 
@@ -335,8 +286,8 @@ if (window.location.search) {
 }
 
 var $ref = $('<div>M</div>').css({
-  'visibility' : 'hidden', 
-  'font-size': '10px', 
+  'visibility' : 'hidden',
+  'font-size': '10px',
   'line-height': '10px',
   'margin': 0,
   padding: 0,
@@ -360,12 +311,24 @@ $('#auth .cancel').click(function () {
 
 $('#logout').click(function () {
   document.cookie = 'token=; path=/';
+  store.clear();
 });
 
-if ($('#screen_name').val() && $('#search').val()) {
-  try {
-    $('form').submit();
-  } catch (e) {
-    // why is this throwing in FF?
-  }
-}
+/**
+ * Grab the user's information for autheticated request to Twitter
+ */
+$.getJSON('/api/user?callback=?', function (data) {
+  console.log(data);
+  if (!data.access_token) return;
+  $body.addClass('logged-in').removeClass('logged-out auth');
+  // set twitterlib token
+  $('#screen_name').val(data.profile.username);
+  $('.my-username').text(data.profile.username);
+});
+
+/**
+ * Get started by requesting login
+ */
+requestLogin();
+
+}(this, document));
