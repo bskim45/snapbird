@@ -19,10 +19,12 @@ var passport        = require('passport'),
 // Grab the config file if it's there
 var configFile;
 try {
-  configFile = require('../config.json');
+  configFile = require('./config.json');
 } catch (e) {
   configFile = {};
 }
+
+console.log(configFile);
 
 // Then configure!
 var config = {
