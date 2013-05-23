@@ -1,2 +1,1 @@
-auth/oauth
-auth/secret.php
+.env
