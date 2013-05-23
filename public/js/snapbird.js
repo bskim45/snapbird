@@ -267,10 +267,6 @@ $('input[type=reset]').click(function () {
   $tweets.empty();
 });
 
-if ( !$('#screen_name').val() ) {
-  $('#screen_name').val(store.get('screen_name'));
-}
-
 // check location.search to see if we need to prepopulate
 if (window.location.search) {
   var query = getQuery(window.location.search.substr(1));
@@ -318,12 +314,27 @@ $('#logout').click(function () {
  * Grab the user's information for autheticated request to Twitter
  */
 $.getJSON('/api/user?callback=?', function (data) {
-  console.log(data);
   if (!data.access_token) return;
   $body.addClass('logged-in').removeClass('logged-out auth');
   // set twitterlib token
   $('#screen_name').val(data.profile.username);
   $('.my-username').text(data.profile.username);
+});
+
+/**
+ * Grab some tweets about snapbird. These are compiled using minstache.
+ */
+$.getJSON('/snapbird-favs.json', function (tweets) {
+  var template = minstache.compile($('#template-tweet').text()),
+      $ul = $('#tweets_about_snapbird ul');
+  var added = 0;
+  $.each(tweets, function (index, tweet) {
+    if (added >= 5 || !tweet.user || !tweet.user.profile_image_url) return;
+    added += 1;
+    // Create a
+    tweet.user.mini_profile_image_url = tweet.user.profile_image_url.replace('_normal', '_mini');
+    $ul.append(template(tweet));
+  });
 });
 
 /**
