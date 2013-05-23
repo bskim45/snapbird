@@ -1,5 +1,7 @@
 (function (window, document, undefined) {
 
+var user = {};
+
 // very hacky code - sorry!
 var $tweets = $('#tweets ul'),
     $body = $('body'),
@@ -118,7 +120,7 @@ $('form').submit(function (e) {
       search = $('#search').val(),
       filter = twitterlib.filter.format(search);
 
-  screen_name = $.trim(type == 'timeline' || type == 'favs' ? $('#screen_name').val() : $auth.text());
+  screen_name = $.trim(type == 'timeline' || type == 'favs' ? $('#screen_name').val() : user.screen_name);
 
   $('body').removeClass('intro').addClass('results loading');
 
@@ -319,6 +321,8 @@ $.getJSON('/api/user?callback=?', function (data) {
   // set twitterlib token
   $('#screen_name').val(data.profile.username);
   $('.my-username').text(data.profile.username);
+  user = data.profile._json;
+  console.log(user);
 });
 
 /**
@@ -331,7 +335,7 @@ $.getJSON('/snapbird-favs.json', function (tweets) {
   $.each(tweets, function (index, tweet) {
     if (added >= 5 || !tweet.user || !tweet.user.profile_image_url) return;
     added += 1;
-    // Create a
+    // Create a mini profile image url
     tweet.user.mini_profile_image_url = tweet.user.profile_image_url.replace('_normal', '_mini');
     $ul.append(template(tweet));
   });
