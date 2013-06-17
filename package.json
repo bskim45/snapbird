@@ -21,7 +21,7 @@
   "gitHead": "0bda4c21408bb1b50d97e418d93f8ac101ada501",
   "dependencies": {
     "passport": "~0.1.17",
-    "passport-twitter": "~0.1.4",
+    "passport-twitter": "~0.1.5",
     "express": "~3.2.5"
   }
 }

@@ -1,6 +1,73 @@
 (function (window, document, undefined) {
 
-var user = {};
+/**
+ * Utilities
+ */
+
+function escapeTags(s) {
+  return (s||'').replace(/[<>]/g, function (m) { return {'<':'&lt;'}[m]||'&gt;'; });
+}
+
+function two(s) {
+  return (s+'').length == 1 ? '0' + s : s;
+}
+
+function updateRequestStatus() {
+  $.getJSON('http://twitter.com/account/rate_limit_status.json?callback=?', function (data) {
+    var date = new Date(Date.parse(data.reset_time));
+    if (! $('#status p.rate').length) $('#status').append('<p class="rate" />');
+    $('#status p.rate').html('Requests left: ' + data.remaining_hits + '<br />Next reset: ' + two(date.getHours()) + ':' + two(date.getMinutes()));
+  });
+}
+
+function getQuery(s) {
+  var query = {};
+
+  s.replace(/\b([^&=]*)=([^&=]*)\b/g, function (m, a, d) {
+    if (typeof query[a] != 'undefined') {
+      query[a] += ',' + d;
+    } else {
+      query[a] = d;
+    }
+  });
+
+  return query;
+}
+
+/**
+ * Twitterlib setup
+ * This happens after login becuase we have to have the user's token to
+ * authenticate them with the proxy.
+ */
+
+var setupTwitterlib = (function () {
+  twitterlib.cache(true);
+  var base = 'http://twoxy.leftlogic.com/1.1';
+  return function (data) {
+    // Setup twitterlib
+    var defaults = {
+      token: data.token,
+      token_secret: data.token_secret,
+      proxy_client_id: data.proxy_client_id
+    };
+    twitterlib.custom('search', base + '/search/tweets.json?q=%search%&page=%page|1%&rpp=%limit|100%&since_id=%since|remove%&result_type=recent&include_entities=true&token=%token%&token_secret=%token_secret%&proxy_client_id=%proxy_client_id%', defaults);
+    twitterlib.custom('timeline', base + '/statuses/user_timeline.json?screen_name=%user%&count=%limit|200%&page=%page|1%&since_id=%since|remove%include_rts=%rts|false%&include_entities=true&token=%token%&token_secret=%token_secret%&proxy_client_id=%proxy_client_id%', defaults);
+    twitterlib.custom('list', base + '/lists/statuses.json?slug=%list%&screen_name=%user%&count=%limit|200%&page=%page|1%&since_id=%since|remove%include_rts=%rts|false%&include_entities=true&token=%token%&token_secret=%token_secret%&proxy_client_id=%proxy_client_id%', defaults);
+    twitterlib.custom('favs', base + '/favorites/list.json?screen_name=%user%&count=%limit|200%&include_entities=true&skip_status=true&page=%page|1%&since_id=%since|remove%&token=%token%&token_secret=%token_secret%&proxy_client_id=%proxy_client_id%', defaults);
+    // twitterlib.custom('retweets', base + '/favorites/list.json?screen_name=%user%&include_entities=true&skip_status=true&page=%page|1%&since_id=%since|remove%');
+    twitterlib.custom('withfriends', base + '/statuses/home_timeline.json?screen_name=%user%&count=%limit|200%&page=%page|1%&since_id=%since|remove%include_rts=%rts|false%&include_entities=true&token=%token%&token_secret=%token_secret%&proxy_client_id=%proxy_client_id%', defaults);
+    twitterlib.custom('dm', base + '/direct_messages.json?count=%limit|200%&page=%page|1%&since_id=%since|remove&include_entities=true&token=%token%&token_secret=%token_secret%&proxy_client_id=%proxy_client_id%', defaults);
+    twitterlib.custom('dm_sent', base + '/direct_messages/sent.json?count=%limit|200%&page=%page|1%&since_id=%since|remove%include_rts=%rts|false%&include_entities=true&token=%token%&token_secret=%token_secret%&proxy_client_id=%proxy_client_id%', defaults);
+    twitterlib.custom('mentions', base + '/statuses/mentions_timeline.json?count=%limit|200%&page=%page|1%&since_id=%since|remove%include_rts=%rts|false%&include_entities=true&token=%token%&token_secret=%token_secret%&proxy_client_id=%proxy_client_id%', defaults);
+  };
+}());
+
+/**
+ * Snapbird
+ */
+
+var user = {},
+    loggedInUser = {};
 
 // very hacky code - sorry!
 var $tweets = $('#tweets ul'),
@@ -22,8 +89,6 @@ var $tweets = $('#tweets ul'),
       dm: 'received direct messages',
       dm_sent: 'sent direct messages'
     };
-
-twitterlib.cache(true);
 
 $body.keyup(function (event) {
   // esc
@@ -63,15 +128,28 @@ $(function () {
 });
 
 /**
- * Login utilities
+ * Login & authentication
+ * The session contains the user's Twitter tokens (token and token_secret) as
+ * well as the proxy client id (proxy_client_id). It's held server side - the
+ * client side accesses it by hitting the /api/user URL.
  */
 
-var isLoggedIn = function () {
+var isLoggedIn = function (cb) {
   return $body.hasClass('logged-in');
 };
 
-var requestLogin = function () {
-  if (!isLoggedIn()) $body.addClass('auth');
+var getSession = function (cb) {
+  $.get('/api/user', function (data) {
+    cb(!!data.token, data);
+  });
+};
+
+var requestLogin = function (cb) {
+  getSession(function (loggedIn, data) {
+    if (!loggedIn) return $body.addClass('auth');
+    $body.addClass('logged-in').removeClass('logged-out auth');
+    cb && cb(data);
+  });
 };
 
 /**
@@ -111,159 +189,131 @@ function updateLoading(type, currentTotal) {
   $('#loading .num').text(total_searched + '-' + (total_searched+inc));
 }
 
+/**
+ * Search form submitted
+ */
 $('form').submit(function (e) {
   e.preventDefault();
   if (!isLoggedIn()) return requestLogin();
 
   var newstate = $(this).serialize(),
       type = $(this).find('#type').val(),
-      search = $('#search').val(),
+      search = $('#search').val()
       filter = twitterlib.filter.format(search);
 
-  screen_name = $.trim(type == 'timeline' || type == 'favs' ? $('#screen_name').val() : user.screen_name);
+  updateLoading(type);
+  screen_name = $('#screen_name').val() || user.screen_name;
 
   $('body').removeClass('intro').addClass('results loading');
 
-  if (state != newstate) {
-    state = newstate;
-    store.set('screen_name', screen_name);
-
-    if (screen_name.match(/\//)) {
-      type = 'list';
-    }
-
-    total_tweets = 0;
-    total_searched = 0;
-    updateLoading(type);
-    $tweets.empty();
-
-    var permalink = '/' + screen_name + '/' + type + '/' + encodeURIComponent(search);
-    $('#permalink').attr('href', permalink);
-    _gaq.push(['_trackPageview', permalink]);
-
-
-    $tweets.append('<li class="searchterm">Searching <em><strong>' + escapeTags(screen_name) + '</strong>&rsquo;s ' + type_string[type] + '</em> for <strong>' + escapeTags(search) + '</strong></li>');
-    $('body').addClass('results');
-
-    // cancel any outstanding request, and kick off a new one
-    twitterlib.cancel()[type](screen_name, { filter: search, rts: true, limit: limit }, function (data, options) {
-      total_searched += options.originalTweets.length;
-
-      setStatus(total_tweets + data.length, total_searched, options.originalTweets.length ? options.originalTweets[options.originalTweets.length - 1].created_at : null);
-
-      // if there's no matched results, but there are raw Tweets, do another call - and keep going until we hit something
-      if (data.length == 0 && total_tweets == 0 && options.originalTweets.length > 0) {
-        // check if we're doing a page max
-        updateLoading(type);
-        clearTimeout(timer);
-        timer = setTimeout(function () {
-          twitterlib.next();
-        }, 500);
-        return;
-      } else if (total_tweets > 0 && data.length == 0 && options.originalTweets.length > 0 && pageMax > 0) {
-        pageMax--;
-        updateLoading(type);
-        clearTimeout(timer);
-        timer = setTimeout(function () {
-          twitterlib.next();
-        }, 500);
-        return;
-      }
-
-      if (total_tweets) {
-        $tweets.find('li:last').addClass('more'); // hard split line
-      }
-
-      var i = 0, j = 0, t, r, scrollPos = null, searches = filter.and.concat(filter.or).join('|');
-
-      for (i = 0; i < data.length; i++) {
-        t = twitterlib.render(data[i], i);
-        $tweets.append(t);
-
-        if (total_tweets == 0 && i == 0) {
-          $tweets.find('li:first').addClass('first');
-        }
-
-        // really tricky code here, we're finding *this* and all nested text nodes
-        // then replacing them with our new <strong>text</strong> elements
-        $tweets.find('.entry-content:last, .entry-content:last *').contents().filter(function () {
-          return this.nodeName == '#text';
-        }).each(function () {
-          // ignore blank lines
-          // make matches bold
-          var change = '';
-          if (/[^\s]/.test(this.nodeValue)) {
-            // encoding of entities happens here, so we need to reverse back out
-            change = this.nodeValue.replace(/[<>&]/g, function (m) {
-              var r = '&amp;';
-              if (m == '<') {
-                r = '&lt;';
-              } else if (m == '>') {
-                r = '&gt;';
-              }
-              return r;
-            }).replace(new RegExp('(' + searches + ')', "gi"), "<strong>$1</strong>");
-            // need to convert this textNode to tags and text
-            $(this).replaceWith(change);
-          }
-        });
-      }
-
-      scrollPos = $tweets.find('li:last').offset().top;
-      if (scrollPos != null) {
-        setTimeout(function () {
-          $('html,body').animate({ scrollTop: scrollPos }, 500, function () {
-          });
-        }, 100);
-      }
-
-      total_tweets += data.length;
-      pageMax = null;
-
-      $('body').removeClass('loading');
-
-      if (statusTop == null) {
-        statusTop = $('#tweets aside').offset().top - parseFloat($('#tweets aside').css('margin-top').replace(/auto/, 0));
-      }
-
-    });
-
-  } else {
-    updateLoading(type);
+  if (state === newstate) {
     clearTimeout(timer);
     timer = setTimeout(function () { twitterlib.cancel().next(); }, 250);
   }
-});
 
-function escapeTags(s) {
-  return (s||'').replace(/[<>]/g, function (m) { return {'<':'&lt;'}[m]||'&gt;'; });
-}
+  state = newstate;
+  store.set('screen_name', screen_name);
 
-function two(s) {
-  return (s+'').length == 1 ? '0' + s : s;
-}
+  if (screen_name.match(/\//)) {
+    type = 'list';
+  }
 
-function updateRequestStatus() {
-  $.getJSON('http://twitter.com/account/rate_limit_status.json?callback=?', function (data) {
-    var date = new Date(Date.parse(data.reset_time));
-    if (! $('#status p.rate').length) $('#status').append('<p class="rate" />');
-    $('#status p.rate').html('Requests left: ' + data.remaining_hits + '<br />Next reset: ' + two(date.getHours()) + ':' + two(date.getMinutes()));
-  });
-}
+  total_tweets = 0;
+  total_searched = 0;
+  $tweets.empty();
 
-function getQuery(s) {
-  var query = {};
+  var permalink = '/' + screen_name + '/' + type + '/' + encodeURIComponent(search);
+  $('#permalink').attr('href', permalink);
+  _gaq.push(['_trackPageview', permalink]);
 
-  s.replace(/\b([^&=]*)=([^&=]*)\b/g, function (m, a, d) {
-    if (typeof query[a] != 'undefined') {
-      query[a] += ',' + d;
-    } else {
-      query[a] = d;
+
+  $tweets.append('<li class="searchterm">Searching <em><strong>' + escapeTags(screen_name) + '</strong>&rsquo;s ' + type_string[type] + '</em> for <strong>' + escapeTags(search) + '</strong></li>');
+  $('body').addClass('results');
+
+  // cancel any outstanding request, and kick off a new one
+  twitterlib.cancel()[type](screen_name, { filter: search, rts: true, limit: limit }, function (data, options) {
+    total_searched += options.originalTweets.length;
+
+    setStatus(total_tweets + data.length, total_searched, options.originalTweets.length ? options.originalTweets[options.originalTweets.length - 1].created_at : null);
+
+    // if there's no matched results, but there are raw Tweets, do another call - and keep going until we hit something
+    if (data.length == 0 && total_tweets == 0 && options.originalTweets.length > 0) {
+      // check if we're doing a page max
+      updateLoading(type);
+      clearTimeout(timer);
+      timer = setTimeout(function () {
+        twitterlib.next();
+      }, 500);
+      return;
+    } else if (total_tweets > 0 && data.length == 0 && options.originalTweets.length > 0 && pageMax > 0) {
+      pageMax--;
+      updateLoading(type);
+      clearTimeout(timer);
+      timer = setTimeout(function () {
+        twitterlib.next();
+      }, 500);
+      return;
     }
+
+    if (total_tweets) {
+      $tweets.find('li:last').addClass('more'); // hard split line
+    }
+
+    var i = 0, j = 0, t, r, scrollPos = null, searches = filter.and.concat(filter.or).join('|');
+
+    for (i = 0; i < data.length; i++) {
+      t = twitterlib.render(data[i], i);
+      $tweets.append(t);
+
+      if (total_tweets == 0 && i == 0) {
+        $tweets.find('li:first').addClass('first');
+      }
+
+      // really tricky code here, we're finding *this* and all nested text nodes
+      // then replacing them with our new <strong>text</strong> elements
+      $tweets.find('.entry-content:last, .entry-content:last *').contents().filter(function () {
+        return this.nodeName == '#text';
+      }).each(function () {
+        // ignore blank lines
+        // make matches bold
+        var change = '';
+        if (/[^\s]/.test(this.nodeValue)) {
+          // encoding of entities happens here, so we need to reverse back out
+          change = this.nodeValue.replace(/[<>&]/g, function (m) {
+            var r = '&amp;';
+            if (m == '<') {
+              r = '&lt;';
+            } else if (m == '>') {
+              r = '&gt;';
+            }
+            return r;
+          }).replace(new RegExp('(' + searches + ')', "gi"), "<strong>$1</strong>");
+          // need to convert this textNode to tags and text
+          $(this).replaceWith(change);
+        }
+      });
+    }
+
+    scrollPos = $tweets.find('li:last').offset().top;
+    if (scrollPos != null) {
+      setTimeout(function () {
+        $('html,body').animate({ scrollTop: scrollPos }, 500, function () {
+        });
+      }, 100);
+    }
+
+    total_tweets += data.length;
+    pageMax = null;
+
+    $('body').removeClass('loading');
+
+    if (statusTop == null) {
+      statusTop = $('#tweets aside').offset().top - parseFloat($('#tweets aside').css('margin-top').replace(/auto/, 0));
+    }
+
   });
 
-  return query;
-}
+});
 
 $('input[type=reset]').click(function () {
   $tweets.empty();
@@ -313,19 +363,6 @@ $('#logout').click(function () {
 });
 
 /**
- * Grab the user's information for autheticated request to Twitter
- */
-$.getJSON('/api/user?callback=?', function (data) {
-  if (!data.access_token) return;
-  $body.addClass('logged-in').removeClass('logged-out auth');
-  // set twitterlib token
-  $('#screen_name').val(data.profile.username);
-  $('.my-username').text(data.profile.username);
-  user = data.profile._json;
-  console.log(user);
-});
-
-/**
  * Grab some tweets about snapbird. These are compiled using minstache.
  */
 $.getJSON('/snapbird-favs.json', function (tweets) {
@@ -344,6 +381,14 @@ $.getJSON('/snapbird-favs.json', function (tweets) {
 /**
  * Get started by requesting login
  */
-requestLogin();
+var loggedIn = function (data) {
+  // set twitterlib token
+  $('#screen_name').val(data.profile.username);
+  $('.my-username').text(data.profile.username);
+  user = data.profile._json;
+  setupTwitterlib(data);
+};
+
+requestLogin(loggedIn);
 
 }(this, document));

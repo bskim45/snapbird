@@ -37,6 +37,9 @@ var config = {
     callbackURL: process.env.TWITTER_CALLBACK ||
                  'http://localhost:3567/auth/twitter/callback'
   },
+  proxy: {
+    id: process.env.PROXY_CLIENT_ID
+  },
   session: {
     secret: configFile.SESSION_SECRET ||
             process.env.SESSION_SECRET ||
@@ -62,10 +65,11 @@ passport.use(new TwitterStrategy({
     consumerSecret: config.twitter.secret,
     callbackURL: config.twitter.callbackURL
   },
-  function(accessToken, refreshToken, profile, done) {
-    console.log.apply(console, [].slice.call(arguments));
+  function(token, tokenSecret, profile, done) {
     return done(null, {
-      access_token: accessToken,
+      token: token,
+      token_secret: tokenSecret,
+      proxy_client_id: config.proxy.id,
       profile: profile
     });
   }
