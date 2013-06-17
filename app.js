@@ -135,6 +135,12 @@ app.get('/auth/twitter/callback',
     res.redirect('/');
   });
 
+app.get('/logout',
+  function(req, res) {
+    req.session.destroy();
+    res.redirect('/');
+  });
+
 // API
 app.get('/api/user',
   function (req, res) {

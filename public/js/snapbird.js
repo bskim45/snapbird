@@ -50,7 +50,7 @@ var setupTwitterlib = (function () {
       token_secret: data.token_secret,
       proxy_client_id: data.proxy_client_id
     };
-    twitterlib.custom('search', base + '/search/tweets.json?q=%search%&page=%page|1%&rpp=%limit|100%&since_id=%since|remove%&result_type=recent&include_entities=true&token=%token%&token_secret=%token_secret%&proxy_client_id=%proxy_client_id%', defaults);
+    // twitterlib.custom('search', base + '/search/tweets.json?q=%search%&rpp=%limit|100%&since_id=%since|remove%&result_type=recent&include_entities=true&token=%token%&token_secret=%token_secret%&proxy_client_id=%proxy_client_id%', defaults);
     twitterlib.custom('timeline', base + '/statuses/user_timeline.json?screen_name=%user%&count=%limit|200%&page=%page|1%&since_id=%since|remove%include_rts=%rts|false%&include_entities=true&token=%token%&token_secret=%token_secret%&proxy_client_id=%proxy_client_id%', defaults);
     twitterlib.custom('list', base + '/lists/statuses.json?slug=%list%&screen_name=%user%&count=%limit|200%&page=%page|1%&since_id=%since|remove%include_rts=%rts|false%&include_entities=true&token=%token%&token_secret=%token_secret%&proxy_client_id=%proxy_client_id%', defaults);
     twitterlib.custom('favs', base + '/favorites/list.json?screen_name=%user%&count=%limit|200%&include_entities=true&skip_status=true&page=%page|1%&since_id=%since|remove%&token=%token%&token_secret=%token_secret%&proxy_client_id=%proxy_client_id%', defaults);
@@ -198,7 +198,7 @@ $('form').submit(function (e) {
 
   var newstate = $(this).serialize(),
       type = $(this).find('#type').val(),
-      search = $('#search').val()
+      search = $('#search').val(),
       filter = twitterlib.filter.format(search);
 
   updateLoading(type);
@@ -352,13 +352,7 @@ var timer = setInterval(function () {
   }
 }, 500);
 
-$('#auth .cancel').click(function () {
-  $('input[type=radio]:first').click();
-  $('body').removeClass('auth');
-});
-
 $('#logout').click(function () {
-  document.cookie = 'token=; path=/';
   store.clear();
 });
 
