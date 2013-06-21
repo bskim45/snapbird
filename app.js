@@ -168,7 +168,7 @@ app.get('/auth/twitter/callback',
 
 app.get('/logout',
   function(req, res) {
-    req.session.destroy();
+    req.session = null;
     res.redirect('/');
   });
 
