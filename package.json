@@ -1,0 +1,28 @@
+{
+  "name": "snapbird",
+  "version": "0.1.0",
+  "description": "A Twitter API based search app, circumventing the 10 day search limit",
+  "main": "app.js",
+  "scripts": {
+    "test": "tap ./test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/remy/snapbird.git"
+  },
+  "keywords": [
+    "twitter",
+    "search",
+    "api",
+    "oauth"
+  ],
+  "author": "",
+  "license": "MIT",
+  "gitHead": "0bda4c21408bb1b50d97e418d93f8ac101ada501",
+  "dependencies": {
+    "passport": "~0.1.17",
+    "passport-twitter": "~0.1.5",
+    "express": "~3.2.5",
+    "hbs": "~2.3.0"
+  }
+}

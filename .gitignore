@@ -1,2 +1,3 @@
-auth/oauth
-auth/secret.php
+.env
+config.json
+Procfile.dev

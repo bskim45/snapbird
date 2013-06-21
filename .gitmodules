@@ -1,3 +1,0 @@
-[submodule "twitterlib"]
-	path = twitterlib
-	url = git://github.com/remy/twitterlib.git

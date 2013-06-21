@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<!--
+  I wrote this app because the search on Twitter sucks (7 days history).
+  I knew that there something I needed to find in my timeline but couldn't
+  find it. Or it might be favourited but again I couldn't find it - so
+  this app does it for me :-)
+
+  - Remy @rem
+-->
+<html lang="en">
+<head>
+<title>Snap Bird - search twitter's history</title>
+<meta charset="utf-8" />
+<link rel="shortcut icon" href="/images/snapbird-icon.png" />
+<link rel="apple-touch-icon" href="/images/snapbird-icon.png" />
+<!--[if IE]>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.2/html5shiv.js"></script>
+<![endif]-->
+<link rel="stylesheet" href="/css/snapbird.css" type="text/css" />
+</head>
+<body class="intro logged-out">
+  <div id="content">
+  <header>
+    <h1><a href="/">Snap Bird</a></h1>
+    <h2>Search beyond Twitter&rsquo;s history</h2>
+  </header>
+  <form id="form">
+    <article id="controls">
+      <fieldset>
+        <div>
+          <label for="type">Search</label>
+          <select name="type" id="type">
+            <option value="timeline">Someone&rsquo;s timeline</option>
+            <option value="favs">Someone&rsquo;s favourites</option>
+            <option value="withfriends">Your friends&rsquo; tweets</option>
+            <option value="mentions">Tweets mentioning you</option>
+            <option value="dm_sent">Your sent direct messages</option>
+            <option value="dm">Your received direct messages</option>
+          </select>
+        </div>
+        <div>
+          <label for="screen_name" id="screen_name_label">Who</label>
+          <input class="screen_name" type="text" id="screen_name" name="screen_name" placeholder="username" value="" />
+        </div>
+        <div>
+          <label for="search">For</label>
+          <input type="text" id="search" name="search" placeholder="search term" value="" />
+        </div>
+      </fieldset>
+    </article>
+    <div id="worm-and-bird" class="showinfo">
+      <input type="submit" value="find it" id="findit-btn" />
+      <a id="logininfo" href="/auth/twitter">
+        <span id="info"></span>
+        <div id="authenticate-info">
+          <p>Twitter allows only <em><strong>you</strong></em> to search within your direct messages, friends&rsquo; tweets, etc.</p>
+          <p>Click here to let Twitter know we&rsquo;re authentically searching on your behalf.</p>
+        </div>
+        <span class="authenticate-button show-logged-out button">Authenticate with <span class="twitter-logo">Twitter</span></span>
+      </a>
+      <span class="authenticate-button show-logged-in button">Hey <span class="my-username">there</span>!</span>
+      <div id="bird"></div>
+    </div>
+  </form>
+  <article id="results">
+    <div id="intro">
+      <aside id="tweets_about_snapbird">
+        <h2>Tweets about Snap Bird</h2>
+        <ul>
+          {{#each tweets}}
+          <li>
+            <a title="By @{{user.screen_name}}" href="http://twitter.com/{{user.screen_name}}/statuses/{{id}}">
+              <img alt="By @{{user.screen_name}}" src="{{user.mini_profile_image_url}}" />
+              {{text}}
+            </a>
+          </li>
+          {{/each}}
+        </ul>
+      </aside>
+      <h2>Where can you search?</h2>
+      <table>
+        <thead>
+          <tr>
+            <th class="no where">Where</th>
+            <th class="twitter">Twitter Search</th>
+            <th class="snapbird">Snap Bird</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Further back than 10 days</td>
+            <td class="no"></td>
+            <td class="yes"></td>
+          </tr>
+          <tr>
+            <td>Within only your friends&rsquo; tweets</td>
+            <td class="no"></td>
+            <td class="yes"></td>
+          </tr>
+          <tr>
+            <td>Within your Direct Messages</td>
+            <td class="no"></td>
+            <td class="yes"></td>
+          </tr>
+          <tr>
+            <td>Within any user&rsquo;s favourites</td>
+            <td class="no"></td>
+            <td class="yes"></td>
+          </tr>
+          <tr>
+            <td>the public timeline</td>
+            <td class="yes"></td>
+            <td class="no"></td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <th></th>
+            <th class="twitter"></th>
+            <th class="snapbird"></th>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <div id="tweets">
+      <aside>
+        <h3>Snap Bird has matched</h3>
+        <p id="matchtweet">none yet</p>
+        <h3>out of</h3>
+        <p id="outof">100 searched</p>
+        <h3>dating back to the <strong id="time">morning</strong> of</h3>
+        <p id="datingbackto"></p>
+        <a href="/" id="permalink" class="button">Permalink</a>
+      </aside>
+
+      <ul></ul>
+
+      <div id="loading">
+        <p>Searching through<br />older tweets</p>
+        <p class="num">0-200</p>
+        <p>
+          <a id="cancel" class="button light cancel">Cancel</a>
+        </p>
+      </div>
+
+      <div id="more">
+        <p class="searched">100 tweets searched.</p>
+        <p>Haven&rsquo;t found what you&rsquo;re looking for?</p>
+        <a class="button light" href="#more">Search more tweets</a>
+      </div>
+    </div>
+
+    <div class="clear"></div>
+  </article>
+  <footer>
+    <nav>
+      <ul id="navlinks">
+        <li><a href="http://snapbird.org">Search Twitter&rsquo;s history</a></li>
+        <!-- <li><a href="/about">About</a></li> --> <!-- Coming soon -->
+        <li><a href="http://github.com/remy/snapbird">Fork on Github</a></li>
+        <li class="show-logged-in"><a id="logout" href="/logout">Logout</a></li>
+      </ul>
+    </nav>
+    <ul id="credit">
+      <li><a href="http://twitter.com/rem">Built by @rem</a></li>
+      <li><a href="http://twitter.com/nicepaul">Designed by @nicepaul</a></li>
+      <li><a href="http://twitter.com/stompfrog">Artwork by @stompfrog</a></li>
+    </ul>
+  </footer>
+  <div id="auth">
+    <div id="overlay"></div>
+    <!-- nasty triple nesting, but necessary for what I'm trying to achieve...I think -->
+    <div id="login">
+      <div>
+        <div>
+          <h2>Hey!</h2>
+          <p>To search your tweets, DMs and friend's tweets, Snap Bird needs access to your Twitter account. Please login below.</p>
+          <p><strong>We will <em>never</em> post to your account. Promise.</strong></p>
+          <p><a class="button" href="/auth/twitter">Log in using <span class="twitter-logo">Twitter.com</span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="/js/twitterlib.js"></script>
+<script src="/js/store.js"></script>
+<script src="/js/snapbird.js"></script>
+<script>
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-1656750-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ga);
+  })();
+</script>
+</body>
+</html>
