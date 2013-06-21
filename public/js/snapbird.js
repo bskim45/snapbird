@@ -376,22 +376,6 @@ $('#logout').click(function () {
 });
 
 /**
- * Grab some tweets about snapbird. These are compiled using minstache.
- */
-// $.getJSON('/snapbird-favs.json', function (tweets) {
-//   var template = minstache.compile($('#template-tweet').text()),
-//       $ul = $('#tweets_about_snapbird ul');
-//   var added = 0;
-//   $.each(tweets, function (index, tweet) {
-//     if (added >= 5 || !tweet.user || !tweet.user.profile_image_url) return;
-//     added += 1;
-//     // Create a mini profile image url
-//     tweet.user.mini_profile_image_url = tweet.user.profile_image_url.replace('_normal', '_mini');
-//     $ul.append(template(tweet));
-//   });
-// });
-
-/**
  * Get started by requesting login
  */
 var loggedIn = function (data) {

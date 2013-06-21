@@ -6,7 +6,8 @@ var pkg             = require('./package.json'),
     path            = require('path');
 
 var express         = require('express'),
-    MemoryStore     = express.session.MemoryStore;
+    MemoryStore     = express.session.MemoryStore,
+    hbs             = require('hbs');
 
 var passport        = require('passport'),
     TwitterStrategy = require('passport-twitter').Strategy;
@@ -44,8 +45,25 @@ var config = {
     secret: configFile.SESSION_SECRET ||
             process.env.SESSION_SECRET ||
             'keyboard fricking cat'
-  }
+  },
+  tweets: []
 };
+
+var tweets = [];
+try {
+  tweets = require('./public/snapbird-favs.json');
+} catch (e) {}
+
+console.log('Loaded %d tweets', tweets.length);
+// Grab 5 tweets from the list
+config.tweets = tweets.map(function (tweet) {
+    if (!tweet.user || !tweet.user.profile_image_url) return;
+    // Create a mini profile image url
+    tweet.user.mini_profile_image_url = tweet.user.profile_image_url.replace('_normal', '_mini');
+    return tweet;
+  })
+  .filter(function (tweet) { return !!tweet; })
+  .slice(0,5);
 
 /**
  * Passport express
@@ -87,14 +105,7 @@ var server = http.createServer(app);
 app.set('port', config.port);
 
 app.set('views', __dirname + '/views');
-app.set('view engine', 'html');
-app.engine('html', function (path, options, fn) {
-  if ('function' == typeof options) {
-    fn = options, options = {};
-  }
-  fs.readFile(path, 'utf8', fn);
-});
-
+app.set('view engine', 'hbs');
 app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.bodyParser());
@@ -149,10 +160,9 @@ app.get('/api/user',
 
 // Serve the front end
 app.get('/*?', function (req, res) {
-  console.log(req.user);
-  console.log(req.session);
   res.render('index', {
-    layout: false
+    layout: false,
+    tweets: config.tweets
   });
 });
 
