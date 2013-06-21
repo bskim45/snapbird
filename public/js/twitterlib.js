@@ -1,5 +1,5 @@
 // twitterlib.js (c) 2011 Remy Sharp
-// @version 1.0.9 / Sun Feb 19 23:05:25 2012 +0000
+// @version 1.1.5 / Fri Jun 21 14:02:46 2013 +0100
 // MIT license: http://rem.mit-license.org
 (function (global) {
   var twitterlib = {};
@@ -509,9 +509,10 @@
       if (def && def.substr(1) == 'remove' && options[key] == undefined) {
         return '';
       }
+
       var val = key == 'limit' ? options[key] + 10 : options[key];
       return q + (options[key] === undefined && def !== undefined ? def.substr(1) : val);
-    }) + (!!this.accessToken ? '&access_token=' + this.accessToken : '');
+    });
   }
 
   function normaliseArgs(options, callback) {
@@ -537,6 +538,8 @@
     return obj;
   }
 
+  // save the last type of request, with all their options - so we can hit
+  // twitterlib.next() and it'll automagically prepopulate the filters, etc.
   function setLast(method, arg, options) {
     last = {
       method: method,
@@ -566,37 +569,36 @@
     }
   }
 
+  // create a new method on twitterlib, that hits the given url,
+  // i.e. twitterlib.custom('dm', '/proxy.php?page=%page%&type=direct_messages');
+  // can now be called using twitterlib.dm('rem', function (t) { });
   function custom(name, url, defaults) {
-    // This condition is commented out to allow overwriting of existing methods
-    if (url /*&& urls[name] == undefined*/) urls[name] = url;
-    // This if is removed so that customs can overwrite existing methods
-    // if (this[name] == undefined) {
-      this[name] = function (term, options, callback) {
-        // handle "termless" custom methods
-        if (typeof term == 'function') {
-          callback = term;
-          term = '';
-        } else if (term.toString() == '[Object object]') {
-          callback = options;
-          options = term;
-          term = '';
-        }
-        options = normaliseArgs(options, callback);
-        setLast(name, term, options);
-        // slight hack to support my own shortcuts
-        options[name] = options.user = term;
-        options.search = encodeURIComponent(term);
-        options = extend(defaults, options);
-        if (options.callback) load(getUrl(name, options), options, options.callback);
-        return this;
-      };
-    // }
+    if (url) urls[name] = url;
+    this[name] = function (term, options, callback) {
+      // handle "termless" custom methods
+      if (typeof term == 'function') {
+        callback = term;
+        term = '';
+      } else if (term.toString() == '[Object object]') {
+        callback = options;
+        options = term;
+        term = '';
+      }
+      options = normaliseArgs(options, callback);
+      setLast(name, term, options);
+      // slight hack to support my own shortcuts
+      options[name] = options.user = term;
+      options.search = encodeURIComponent(term);
+      options = extend(defaults, options);
+      if (options.callback) load(getUrl(name, options), options, options.callback);
+      return this;
+    };
     // makes my code nicer to read when setting up twitterlib object
     return this[name];
   }
 
   twitterlib = {
-    version: '1.0.9', //@version 1.0.9 / Sun Feb 19 23:05:25 2012 +0000
+    version: '1.1.5', //@version 1.1.5 / Fri Jun 21 14:02:46 2013 +0100
     // search is an exception case
     custom: custom,
     getUrl: getUrl,
@@ -660,10 +662,6 @@
       if (!window.JSON || !window.sessionStorage) {
         caching = false;
       }
-    },
-    setAccessToken: function (token) {
-      this.accessToken = token;
-      return this;
     }
   };
 
