@@ -201,6 +201,22 @@ h2 {
   padding: 0 8px;
   cursor: pointer;
 }
+.button.light {
+  border-left: 1px solid #ddd;
+  border-top: 1px solid #ddd;
+  border-right: 1px solid #aaa;
+  border-bottom: 1px solid #aaa;
+  background: url(/images/white-button-bg.gif) repeat-x;
+  color: #0971a1;
+  text-transform: none;
+  text-shadow: none;
+  text-decoration: none;
+  text-align: center;
+}
+.cancel.button {
+  margin: 5px 0;
+  font-size: 18px;
+}
 
 .authenticate-button {
   min-width: 167px;
@@ -638,21 +654,11 @@ body.loading #more {
 }
 
 #more a {
-  border-left: 1px solid #ddd;
-  border-top: 1px solid #ddd;
-  border-right: 1px solid #aaa;
-  border-bottom: 1px solid #aaa;
   font-weight: bold;
   line-height: 34px;
   width: 450px;
-  background: url(/images/white-button-bg.gif) repeat-x;
   height: 34px;
   font-size: 18px;
-  color: #0971a1;
-  text-transform: none;
-  text-shadow: none;
-  text-decoration: none;
-  text-align: center;
 }
 
 #more a:hover {
