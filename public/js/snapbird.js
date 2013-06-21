@@ -55,7 +55,6 @@ var setupTwitterlib = (function () {
 var user = {},
     loggedInUser = {};
 
-// very hacky code - sorry!
 var $searchForm = $('#form'),
     $type = $('#type'),
     $screen_name = $('#screen_name'),
@@ -64,7 +63,8 @@ var $searchForm = $('#form'),
     $body = $('body'),
     $screen_name_label = $('#screen_name_label'),
     $auth = $('#auth_screen_name'),
-    screen_name = url = state = '',
+    state,
+    screen_name,
     page = 1,
     limit = 100, // performs better and avoids 502!
     pageMax = null,

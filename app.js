@@ -109,6 +109,16 @@ passport.use(new TwitterStrategy({
 ));
 
 /**
+ * Utilities
+ */
+
+var noCache = function (req, res, next) {
+  res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+  res.header('Pragma', 'no-cache');
+  next();
+};
+
+/**
  * Configure & setup
  */
 
@@ -174,6 +184,7 @@ app.get('/logout',
 
 // API
 app.get('/api/user',
+  noCache,
   function (req, res) {
     res.jsonp(req.user || {});
   });
