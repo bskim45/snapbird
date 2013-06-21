@@ -132,6 +132,9 @@ app.set('port', config.port);
 app.set('trust proxy');
 app.set('views', __dirname + '/views');
 app.set('view engine', 'hbs');
+app.locals({
+  pkg: pkg
+});
 app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.bodyParser());
@@ -153,11 +156,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(app.router);
 
 app.configure('development', function () {
+  app.set('isproduction', false);
   app.use(express.errorHandler());
 });
 
 app.configure('production', function () {
-  app.use(function (req, res, next, err) {
+  app.set('isproduction', true);
+  app.use(function (err, req, res, next) {
+    console.error(err);
     res.send('There was an error, sorry.');
   });
 });

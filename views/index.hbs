@@ -16,7 +16,12 @@
 <!--[if IE]>
   <script src="http://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.2/html5shiv.js"></script>
 <![endif]-->
+{{#if settings.isproduction}}
+<link rel="stylesheet" href="/build/snapbird.min.css?{{ pkg.version }}" type="text/css" />
+{{/if}}
+{{#unless settings.isproduction}}
 <link rel="stylesheet" href="/css/snapbird.css" type="text/css" />
+{{/unless}}
 </head>
 <body class="intro logged-out">
   <div id="content">
@@ -184,10 +189,15 @@
   </div>
 </div>
 
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+{{#if settings.isproduction}}
+<script src="/build/snapbird.build.js?{{ pkg.version }}"></script>
+{{/if}}
+{{#unless settings.isproduction}}
+<script src="/js/jquery.min.js"></script>
 <script src="/js/twitterlib.js"></script>
 <script src="/js/store.js"></script>
 <script src="/js/snapbird.js"></script>
+{{/unless}}
 <script>
   var _gaq = _gaq || [];
   _gaq.push(['_setAccount', 'UA-1656750-19']);

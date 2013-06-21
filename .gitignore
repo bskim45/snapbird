@@ -1,3 +1,4 @@
 .env
 config.json
 Procfile.dev
+public/build/
