@@ -77,8 +77,8 @@ var $tweets = $('#tweets ul'),
     limit = 100, // performs better and avoids 502!
     pageMax = null,
     total_tweets = 0,
-    timer = null,
     total_searched = 0,
+    timer = null,
     statusTop = null,
     type_string = {
       timeline : 'tweets',
@@ -209,6 +209,7 @@ $('form').submit(function (e) {
   if (state === newstate) {
     clearTimeout(timer);
     timer = setTimeout(function () { twitterlib.cancel().next(); }, 250);
+    return;
   }
 
   state = newstate;
