@@ -20,20 +20,6 @@ function updateRequestStatus() {
   });
 }
 
-function getQuery(s) {
-  var query = {};
-
-  s.replace(/\b([^&=]*)=([^&=]*)\b/g, function (m, a, d) {
-    if (typeof query[a] != 'undefined') {
-      query[a] += ',' + d;
-    } else {
-      query[a] = d;
-    }
-  });
-
-  return query;
-}
-
 /**
  * Twitterlib setup
  * This happens after login becuase we have to have the user's token to
@@ -70,11 +56,14 @@ var user = {},
     loggedInUser = {};
 
 // very hacky code - sorry!
-var $tweets = $('#tweets ul'),
+var $searchForm = $('#form'),
+    $type = $('#type'),
+    $screen_name = $('#screen_name'),
+    $search = $('#search'),
+    $tweets = $('#tweets ul'),
     $body = $('body'),
     $screen_name_label = $('#screen_name_label'),
     $auth = $('#auth_screen_name'),
-    $screen_name = $('#screen_name'),
     screen_name = url = state = '',
     page = 1,
     limit = 100, // performs better and avoids 502!
@@ -104,7 +93,7 @@ $body.keyup(function (event) {
 
 $('#more a').on('click', function () {
   pageMax = 5;
-  $('form').submit();
+  $searchForm.submit();
   return false;
 });
 
@@ -192,37 +181,49 @@ function updateLoading(type, currentTotal) {
   $('#loading .num').text(total_searched + '-' + (total_searched+inc));
 }
 
+function updatePermalink(screen_name, type, search) {
+  var permalink = '/' + (screen_name || $screen_name.val() || user.screen_name) +
+                  '/' + (type || $type.val()) +
+                  '/' + encodeURIComponent((search || $search.val()));
+  if (permalink.match(/undefined/)) return '';
+  $('#permalink').attr('href', permalink);
+  return permalink;
+}
+
+/**
+ * Handle the query type being updated
+ */
 $('#type').bind('change keyup', function () {
   var authRequired = !(this.value == 'timeline' || this.value == 'favs');
   $screen_name_label.text(authRequired ? 'You' : 'Who?');
+  $screen_name
+    .attr('disabled', authRequired);
   if (authRequired) {
     $screen_name
-      .attr('disabled', true)
       .data('old', $screen_name.val())
-      .val(user.screen_name); // space forces the placeholder to hide
-  } else {
-    $screen_name
-      .removeAttr('disabled')
-      .val($screen_name.data('old'));
+      .val(user.screen_name);
+  } else if ($screen_name.data('old')) {
+    $screen_name.val($screen_name.data('old'));
   }
+  updatePermalink();
 }).trigger('change');
 
 /**
  * Search form submitted
  */
-$('form').submit(function (e) {
+$searchForm.submit(function (e) {
   e.preventDefault();
   if (!isLoggedIn()) return requestLogin();
 
   var newstate = $(this).serialize(),
-      type = $(this).find('#type').val(),
-      search = $('#search').val(),
+      type = $type.val(),
+      search = $search.val(),
       filter = twitterlib.filter.format(search);
 
   updateLoading(type);
   screen_name = $('#screen_name').val() || user.screen_name;
 
-  $('body').removeClass('intro').addClass('results loading');
+  $body.removeClass('intro').addClass('results loading');
 
   if (state === newstate) {
     clearTimeout(timer);
@@ -241,10 +242,7 @@ $('form').submit(function (e) {
   total_searched = 0;
   $tweets.empty();
 
-  var permalink = '/' + screen_name + '/' + type + '/' + encodeURIComponent(search);
-  $('#permalink').attr('href', permalink);
-  _gaq.push(['_trackPageview', permalink]);
-
+  _gaq.push(['_trackPageview', updatePermalink(screen_name, type, search)]);
 
   $tweets.append('<li class="searchterm">Searching <em><strong>' + escapeTags(screen_name) + '</strong>&rsquo;s ' + type_string[type] + '</em> for <strong>' + escapeTags(search) + '</strong></li>');
   $('body').addClass('results');
@@ -338,20 +336,6 @@ $('input[type=reset]').click(function () {
   $tweets.empty();
 });
 
-// check location.search to see if we need to prepopulate
-if (window.location.search) {
-  var query = getQuery(window.location.search.substr(1));
-  if (query.screen_name) {
-    $('#screen_name').val(decodeURIComponent(query.screen_name));
-  }
-  if (query.search) {
-    $('#search').val(decodeURIComponent(query.search));
-  }
-  if (query.favs) {
-    $('#favs').attr('checked', 'checked');
-  }
-}
-
 var $ref = $('<div>M</div>').css({
   'visibility' : 'hidden',
   'font-size': '10px',
@@ -400,6 +384,22 @@ var loggedIn = function (data) {
   $('.my-username').text(data.profile.username);
   user = data.profile._json;
   setupTwitterlib(data);
+
+  // Restore from permalink
+  if (window.location.pathname.length > 1) {
+    var path = window.location.pathname.substr(1),
+        segments = path.split('/');
+    if (segments[0]) {
+      $('#screen_name').val(decodeURIComponent(segments[0]));
+    }
+    if (segments[1]) {
+      $('#type').val(decodeURIComponent(segments[0]));
+    }
+    if (segments[2]) {
+      $('#search').val(decodeURIComponent(segments[2]));
+    }
+    $searchForm.submit();
+  }
 };
 
 requestLogin(loggedIn);
