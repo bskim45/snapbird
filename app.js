@@ -84,6 +84,21 @@ passport.use(new TwitterStrategy({
     callbackURL: config.twitter.callbackURL
   },
   function(token, tokenSecret, profile, done) {
+    // Delete information we don't need that will fill up the cookie
+    //
+    //      .---------------------------.
+    //      /_   _   _         __  __   /|
+    //     // \ / \ / \ |_/ | |_  (_   / |
+    //    / \_  \_/ \_/ | \ | |__ ,_/ /  |
+    //   :.__________________________/   /
+    //   |  .--. .--.   .--.   .--.  |  /
+    //   | (    )    ) (    ) (    ) | /
+    //   |  '--' '--'   '--'   '--'  |/
+    //   '---------------------------'
+    //
+    delete profile._raw;
+    delete profile._json;
+    delete profile.photos;
     return done(null, {
       token: token,
       token_secret: tokenSecret,
@@ -104,6 +119,7 @@ var server = http.createServer(app);
 
 app.set('port', config.port);
 
+app.set('trust proxy');
 app.set('views', __dirname + '/views');
 app.set('view engine', 'hbs');
 app.use(express.favicon());
@@ -111,9 +127,13 @@ app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(express.cookieParser());
-app.use(express.session({
+app.use(express.cookieSession({
+  proxy: true,
   secret: config.session.secret,
-  store: new MemoryStore()
+  key: 'snapbird',
+  cookie: {
+    maxAge: 365 * 24 * 60 * 60 * 1000
+  }
 }));
 
 app.use(passport.initialize());
