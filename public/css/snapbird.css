@@ -408,7 +408,7 @@ table tfoot th {
 th {
   font-size: 12px;
   padding: 5px 10px;
-  color: #ccc;
+  color: #ccc;
   color: #9F0000;
   vertical-align: top;
 }
@@ -696,7 +696,7 @@ body.loading #more {
 
 #login h2 {
   padding: 0;
-  margin: 20px 0;
+  margin: 14px 0 0;
   font-size: 1.5em;
 }
 
@@ -704,20 +704,21 @@ body.loading #more {
   border-radius: 10px;
   background: rgba(191, 217, 22, 0.4);
   position: absolute;
-  top: 200px;
-  width: 500px;
+  top: -10px;
+  width: 394px;
   padding: 10px;
+  right: 30px;
 }
 
 #login div div {
   color: #000;
-  padding: 10px 30px;
+  padding: 3px 22px;
   background: rgb(235, 244, 209);
 }
 
 #login p {
   line-height: 28px;
-  margin: 20px 0;
+  margin: 14px 0;
 }
 
 #login a {
