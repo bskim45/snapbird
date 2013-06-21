@@ -72,6 +72,9 @@ var user = {},
 // very hacky code - sorry!
 var $tweets = $('#tweets ul'),
     $body = $('body'),
+    $screen_name_label = $('#screen_name_label'),
+    $auth = $('#auth_screen_name'),
+    $screen_name = $('#screen_name'),
     screen_name = url = state = '',
     page = 1,
     limit = 100, // performs better and avoids 502!
@@ -188,6 +191,21 @@ function updateLoading(type, currentTotal) {
   if (type == 'favs') inc = 20;
   $('#loading .num').text(total_searched + '-' + (total_searched+inc));
 }
+
+$('#type').bind('change keyup', function () {
+  var authRequired = !(this.value == 'timeline' || this.value == 'favs');
+  $screen_name_label.text(authRequired ? 'You' : 'Who?');
+  if (authRequired) {
+    $screen_name
+      .attr('disabled', true)
+      .data('old', $screen_name.val())
+      .val(user.screen_name); // space forces the placeholder to hide
+  } else {
+    $screen_name
+      .removeAttr('disabled')
+      .val($screen_name.data('old'));
+  }
+}).trigger('change');
 
 /**
  * Search form submitted
@@ -360,18 +378,18 @@ $('#logout').click(function () {
 /**
  * Grab some tweets about snapbird. These are compiled using minstache.
  */
-$.getJSON('/snapbird-favs.json', function (tweets) {
-  var template = minstache.compile($('#template-tweet').text()),
-      $ul = $('#tweets_about_snapbird ul');
-  var added = 0;
-  $.each(tweets, function (index, tweet) {
-    if (added >= 5 || !tweet.user || !tweet.user.profile_image_url) return;
-    added += 1;
-    // Create a mini profile image url
-    tweet.user.mini_profile_image_url = tweet.user.profile_image_url.replace('_normal', '_mini');
-    $ul.append(template(tweet));
-  });
-});
+// $.getJSON('/snapbird-favs.json', function (tweets) {
+//   var template = minstache.compile($('#template-tweet').text()),
+//       $ul = $('#tweets_about_snapbird ul');
+//   var added = 0;
+//   $.each(tweets, function (index, tweet) {
+//     if (added >= 5 || !tweet.user || !tweet.user.profile_image_url) return;
+//     added += 1;
+//     // Create a mini profile image url
+//     tweet.user.mini_profile_image_url = tweet.user.profile_image_url.replace('_normal', '_mini');
+//     $ul.append(template(tweet));
+//   });
+// });
 
 /**
  * Get started by requesting login

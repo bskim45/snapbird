@@ -567,9 +567,9 @@
   }
 
   function custom(name, url, defaults) {
-    // This condition is commenetd out to allow overwriting of existing URLs
+    // This condition is commented out to allow overwriting of existing methods
     if (url /*&& urls[name] == undefined*/) urls[name] = url;
-    // This if is removed so that customs can overwrite existing methods.
+    // This if is removed so that customs can overwrite existing methods
     // if (this[name] == undefined) {
       this[name] = function (term, options, callback) {
         // handle "termless" custom methods
