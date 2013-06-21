@@ -42,8 +42,8 @@ var setupTwitterlib = (function () {
     twitterlib.custom('favs', base + '/favorites/list.json?screen_name=%user%&count=%limit|200%&include_entities=true&skip_status=true&page=%page|1%&since_id=%since|remove%&token=%token%&token_secret=%token_secret%&proxy_client_id=%proxy_client_id%', defaults);
     // twitterlib.custom('retweets', base + '/favorites/list.json?screen_name=%user%&include_entities=true&skip_status=true&page=%page|1%&since_id=%since|remove%');
     twitterlib.custom('withfriends', base + '/statuses/home_timeline.json?screen_name=%user%&count=%limit|200%&page=%page|1%&since_id=%since|remove%include_rts=%rts|false%&include_entities=true&token=%token%&token_secret=%token_secret%&proxy_client_id=%proxy_client_id%', defaults);
-    twitterlib.custom('dm', base + '/direct_messages.json?count=%limit|200%&page=%page|1%&since_id=%since|remove&include_entities=true&token=%token%&token_secret=%token_secret%&proxy_client_id=%proxy_client_id%', defaults);
-    twitterlib.custom('dm_sent', base + '/direct_messages/sent.json?count=%limit|200%&page=%page|1%&since_id=%since|remove%include_rts=%rts|false%&include_entities=true&token=%token%&token_secret=%token_secret%&proxy_client_id=%proxy_client_id%', defaults);
+    twitterlib.custom('dm', base +       '/direct_messages.json?count=%limit|200%&page=%page|1%&since_id=%since|remove%&include_entities=true&token=%token%&token_secret=%token_secret%&proxy_client_id=%proxy_client_id%', defaults);
+    twitterlib.custom('dm_sent', base + '/direct_messages/sent.json?count=%limit|200%&page=%page|1%&since_id=%since|remove%&include_entities=true&token=%token%&token_secret=%token_secret%&proxy_client_id=%proxy_client_id%', defaults);
     twitterlib.custom('mentions', base + '/statuses/mentions_timeline.json?count=%limit|200%&page=%page|1%&since_id=%since|remove%include_rts=%rts|false%&include_entities=true&token=%token%&token_secret=%token_secret%&proxy_client_id=%proxy_client_id%', defaults);
   };
 }());
