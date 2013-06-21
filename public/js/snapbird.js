@@ -82,21 +82,6 @@ var $searchForm = $('#form'),
       dm_sent: 'sent direct messages'
     };
 
-$body.keyup(function (event) {
-  // esc
-  if (event.which == 27) {
-    clearTimeout(timer);
-    $body.removeClass('loading');
-    twitterlib.cancel();
-  }
-});
-
-$('#more a').on('click', function () {
-  pageMax = 5;
-  $searchForm.submit();
-  return false;
-});
-
 $(function () {
   var msie6 = $.browser == 'msie' && $.browser.version < 7;
   if (!msie6) {
@@ -118,6 +103,26 @@ $(function () {
     });
   }
 });
+
+/**
+ * Search cancelling
+ */
+
+function cancelSearch() {
+  clearTimeout(timer);
+  $body.removeClass('loading');
+  twitterlib.cancel();
+}
+
+// Escape key
+$body.keyup(function (event) {
+  if (event.which == 27) {
+    cancelSearch();
+  }
+});
+
+// Button
+$('#cancel').click(cancelSearch);
 
 /**
  * Login & authentication
@@ -207,6 +212,17 @@ $('#type').bind('change keyup', function () {
   }
   updatePermalink();
 }).trigger('change');
+
+/**
+ * Search
+ */
+
+// Moar tweets!
+$('#more a').on('click', function () {
+  pageMax = 5;
+  $searchForm.submit();
+  return false;
+});
 
 /**
  * Search form submitted
