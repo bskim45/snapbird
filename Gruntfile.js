@@ -71,6 +71,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-cssmin');
 
   // Default task.
+  grunt.registerTask('default', ['cssmin', 'concat:pre', 'uglify:min', 'concat:build']);
+  grunt.registerTask('heroku:', ['cssmin', 'concat:pre', 'uglify:min', 'concat:build']);
   grunt.registerTask('heroku:production', ['cssmin', 'concat:pre', 'uglify:min', 'concat:build']);
 
 };
