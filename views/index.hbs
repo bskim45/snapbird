@@ -75,7 +75,7 @@
           {{#each tweets}}
           <li>
             <a title="By @{{user.screen_name}}" href="http://twitter.com/{{user.screen_name}}/statuses/{{id}}">
-              <img alt="By @{{user.screen_name}}" src="{{user.mini_profile_image_url}}" />
+              <img alt="By @{{user.screen_name}}" src="http://twitter.com/api/users/profile_image/{{user.screen_name}}" />
               {{text}}
             </a>
           </li>
